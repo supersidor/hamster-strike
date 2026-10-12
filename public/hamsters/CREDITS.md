@@ -1,0 +1,137 @@
+# Hamster photos
+
+Cut out from photos on Wikimedia Commons, under the licenses below. Sources were matched to the cutouts automatically.
+
+- 000.png: [201606 hamster b&w.png](https://commons.wikimedia.org/wiki/File:201606_hamster_b%26w.png), DataBase Center for Life Science (DBCLS), CC BY 4.0
+- 001.png: [Baby Hamster - 2 Weeks Old.jpg](https://commons.wikimedia.org/wiki/File:Baby_Hamster_-_2_Weeks_Old.jpg), Augustus Binu : flickr : Instagram, CC BY-SA 3.0
+- 002.png: [Bowing to Pressure - Flickr - Dennis S. Hurd.jpg](https://commons.wikimedia.org/wiki/File:Bowing_to_Pressure_-_Flickr_-_Dennis_S._Hurd.jpg), Dennis Sylvester Hurd, CC0
+- 003.png: [Chomik syryjski (Just a Dream).jpg](https://commons.wikimedia.org/wiki/File:Chomik_syryjski_(Just_a_Dream).jpg), Karolinasz, CC BY 3.0
+- 004.png: [Dove Longhaired Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Dove_Longhaired_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 005.png: [El raton.jpg](https://commons.wikimedia.org/wiki/File:El_raton.jpg), Jhon Marcos Ortiz Llovera, CC BY-SA 4.0
+- 006.png: [Extreme Dilute Cinnamon Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Extreme_Dilute_Cinnamon_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 007.png: [Extreme Dilute Golden Hamster.jpg](https://commons.wikimedia.org/wiki/File:Extreme_Dilute_Golden_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 008.png: [Extreme Dilute Golden Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Extreme_Dilute_Golden_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 009.png: [Extreme Dilute Yellow Black Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Extreme_Dilute_Yellow_Black_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 010.png: [Flankendrüse.jpg](https://commons.wikimedia.org/wiki/File:Flankendr%C3%BCse.jpg), Uwe Gille, CC BY-SA 3.0
+- 011.png: [Franio1000.jpg](https://commons.wikimedia.org/wiki/File:Franio1000.jpg), Franio194, CC BY-SA 4.0
+- 012.png: [Golden hamster front 1.jpg](https://commons.wikimedia.org/wiki/File:Golden_hamster_front_1.jpg), Adamjennison111 at English Wikipedia, CC BY 2.5
+- 013.png: [Goldhamster 2.jpg](https://commons.wikimedia.org/wiki/File:Goldhamster_2.jpg), unknown, CC BY-SA 3.0
+- 014.png: [Goldhamster terrarium.jpg](https://commons.wikimedia.org/wiki/File:Goldhamster_terrarium.jpg), Sqrt (Andreas Hein), CC BY 3.0
+- 015.png: [Goldhamster.jpg](https://commons.wikimedia.org/wiki/File:Goldhamster.jpg), Sebastian Rittau, Public domain
+- 016.png: [Hami-03.jpg](https://commons.wikimedia.org/wiki/File:Hami-03.jpg), Mingus19 at en.wikipedia, Public domain
+- 017.png: [Hammy the Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Hammy_the_Syrian_Hamster.jpg), Melon247 at English Wikipedia, Public domain
+- 018.png: [Hamster120.jpg](https://commons.wikimedia.org/wiki/File:Hamster120.jpg), Raining128, CC BY-SA 3.0
+- 019.png: [Peach the golden hamster (2007).jpg](https://commons.wikimedia.org/wiki/File:Peach_the_golden_hamster_(2007).jpg), TetraHydroCannabinol, CC BY-SA 3.0
+- 020.png: [Hamster Butt.jpg](https://commons.wikimedia.org/wiki/File:Hamster_Butt.jpg), digital_image_fan, CC BY 2.0
+- 021.png: [Hamster dore noix klet.jpg](https://commons.wikimedia.org/wiki/File:Hamster_dore_noix_klet.jpg), VincentGb, CC BY-SA 4.0
+- 022.png: [Hamster Golden.jpg](https://commons.wikimedia.org/wiki/File:Hamster_Golden.jpg), Pazfca, CC BY-SA 3.0
+- 023.png: [Hamster im Gras.jpg](https://commons.wikimedia.org/wiki/File:Hamster_im_Gras.jpg), Tux, Public domain
+- 024.png: [Juvenile Female Mesocricetus auratus in Pet Store enclosure, Illinois, USA.jpg](https://commons.wikimedia.org/wiki/File:Juvenile_Female_Mesocricetus_auratus_in_Pet_Store_enclosure,_Illinois,_USA.jpg), Wschlitz, CC BY 4.0
+- 025.png: [KoreaHamster.jpg](https://commons.wikimedia.org/wiki/File:KoreaHamster.jpg), 뭘로할까, CC BY-SA 4.0
+- 026.png: [Křečoun.jpg](https://commons.wikimedia.org/wiki/File:K%C5%99e%C4%8Doun.jpg), Já-Kristýna Hakrová, Public domain
+- 027.png: [Longhaired Female Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Longhaired_Female_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 028.png: [Loviisa valppaana (4872415148).jpg](https://commons.wikimedia.org/wiki/File:Loviisa_valppaana_(4872415148).jpg), Karri Huhtanen from Tampere, Finland, CC BY-SA 2.0
+- 029.png: [Male hamster.jpg](https://commons.wikimedia.org/wiki/File:Male_hamster.jpg), SalemStardust, CC BY-SA 4.0
+- 030.png: [Mesocricetus auratus (golden).jpg](https://commons.wikimedia.org/wiki/File:Mesocricetus_auratus_(golden).jpg), Firelord at English Wikipedia, Public domain
+- 031.png: [Mesocricetus auratus.jpg](https://commons.wikimedia.org/wiki/File:Mesocricetus_auratus.jpg), Asia The Platypus, Public domain
+- 032.png: [My hamster pierogi, in 2024.jpg](https://commons.wikimedia.org/wiki/File:My_hamster_pierogi,_in_2024.jpg), Angietoc, CC BY-SA 4.0
+- 033.png: [Panda Hamster.jpg](https://commons.wikimedia.org/wiki/File:Panda_Hamster.jpg), Widget-policyq229, CC BY-SA 4.0
+- 034.png: [Peach rest.jpg](https://commons.wikimedia.org/wiki/File:Peach_rest.jpg), TetraHydroCannabinol, CC BY-SA 3.0
+- 035.png: [Peach the pet hamster.jpg](https://commons.wikimedia.org/wiki/File:Peach_the_pet_hamster.jpg), TetraHydroCannabinol, CC BY-SA 3.0
+- 036.png: [Pet Hamster.jpg](https://commons.wikimedia.org/wiki/File:Pet_Hamster.jpg), Батяшев Александр, CC BY-SA 3.0
+- 037.png: [Recessive Dappled Cream Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Recessive_Dappled_Cream_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 038.png: [Recessive Dappled Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Recessive_Dappled_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 039.png: [REW Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:REW_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 040.png: [Sable Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Sable_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 041.png: [Sally (Hamster) 1.JPG](https://commons.wikimedia.org/wiki/File:Sally_(Hamster)_1.JPG), Tb240904, Public domain
+- 042.png: [Syrian Hamster 2.JPG](https://commons.wikimedia.org/wiki/File:Syrian_Hamster_2.JPG), Daikorax, CC BY-SA 3.0
+- 043.png: [Syrian Hamster Mid-grooming.jpg](https://commons.wikimedia.org/wiki/File:Syrian_Hamster_Mid-grooming.jpg), John Stockla, CC BY-SA 4.0
+- 044.png: [Yellow Black Female Hamster.jpg](https://commons.wikimedia.org/wiki/File:Yellow_Black_Female_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 045.png: [Yellow Black Syrian Hamster.jpg](https://commons.wikimedia.org/wiki/File:Yellow_Black_Syrian_Hamster.jpg), Hathorhamstery, CC BY-SA 4.0
+- 046.png: [אולף.jpg](https://commons.wikimedia.org/wiki/File:%D7%90%D7%95%D7%9C%D7%A3.jpg), King-olaf-and-Queen-apchi, CC BY-SA 4.0
+- 047.png: [Djungarian hamster eating sunflower seeds.jpg](https://commons.wikimedia.org/wiki/File:Djungarian_hamster_eating_sunflower_seeds.jpg), Anton Vakulenko, CC BY-SA 2.0
+- 048.png: [Djungarian Hamster Pearl White.jpg](https://commons.wikimedia.org/wiki/File:Djungarian_Hamster_Pearl_White.jpg), No machine-readable author provided. Ko1 assumed (based on copyright claims)., CC BY-SA 2.5
+- 049.png: [Djungarian hamster Świr eating pumpkin seed.JPG](https://commons.wikimedia.org/wiki/File:Djungarian_hamster_%C5%9Awir_eating_pumpkin_seed.JPG), Mar lena, CC BY 3.0
+- 050.png: [DjungarianHamster Diesel.jpg](https://commons.wikimedia.org/wiki/File:DjungarianHamster_Diesel.jpg), Adamderesz, Public domain
+- 051.png: [Drops futtert.jpg](https://commons.wikimedia.org/wiki/File:Drops_futtert.jpg), Banger, CC BY-SA 3.0
+- 052.png: [Es ist ein Dsungarischer Zwerkhamster 2014-05-25 13-27.png](https://commons.wikimedia.org/wiki/File:Es_ist_ein_Dsungarischer_Zwerkhamster_2014-05-25_13-27.png), User:Prouder99, CC BY-SA 3.0
+- 053.png: [Musu grauzikas resize.jpg](https://commons.wikimedia.org/wiki/File:Musu_grauzikas_resize.jpg), unknown, Public domain
+- 054.png: [Musu grauzikas1 resize.jpg](https://commons.wikimedia.org/wiki/File:Musu_grauzikas1_resize.jpg), unknown, Public domain
+- 055.png: [Pearl Winter White Russian Dwarf Hamster - Face.jpg](https://commons.wikimedia.org/wiki/File:Pearl_Winter_White_Russian_Dwarf_Hamster_-_Face.jpg), Jpbarrass, CC BY-SA 3.0
+- 056.png: [Pearl Winter White Russian Dwarf Hamster - Front.jpg](https://commons.wikimedia.org/wiki/File:Pearl_Winter_White_Russian_Dwarf_Hamster_-_Front.jpg), Jpbarrass, CC BY-SA 3.0
+- 057.png: [Phodopus sungorus - Hamsterkraftwerk.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus_-_Hamsterkraftwerk.jpg), Mylius, CC BY-SA 3.0
+- 058.png: [Phodopus sungorus Bia.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus_Bia.jpg), Joaquin008, CC BY-SA 3.0
+- 059.png: [Phodopus sungorus, agouti pearl.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus,_agouti_pearl.jpg), Per Enström, a friend of en:User:Plrk (User:Plrk), CC BY-SA 4.0
+- 060.png: [Phodopus sungorus3.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus3.jpg), Dirk Goldhahn, CC BY-SA 2.5
+- 061.png: [PhodopusSungorus 1.jpg](https://commons.wikimedia.org/wiki/File:PhodopusSungorus_1.jpg), Philipp Salzgeber, CC BY 2.5
+- 062.png: [Phodopus sungorus male.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus_male.jpg), SAWADA Koichi, CC BY-SA 2.5
+- 063.png: [Phodopus sungorus Tiny.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus_Tiny.jpg), Joaquin008, CC BY-SA 3.0
+- 064.png: [Phodopus sungorus 豆豆.JPG](https://commons.wikimedia.org/wiki/File:Phodopus_sungorus_%E8%B1%86%E8%B1%86.JPG), 劉久弘, CC BY-SA 3.0
+- 065.png: [Rollito 3.jpg](https://commons.wikimedia.org/wiki/File:Rollito_3.jpg), Ana-Aída, CC BY 3.0
+- 066.png: [Rollito--2.jpg](https://commons.wikimedia.org/wiki/File:Rollito--2.jpg), Ana-Aída, CC BY 3.0
+- 067.png: [Talvikko.jpg](https://commons.wikimedia.org/wiki/File:Talvikko.jpg), Alexander Horn, CC BY 3.0
+- 068.png: [Thomas Müller hamster ruso Phodopus sungorus 1.jpg](https://commons.wikimedia.org/wiki/File:Thomas_M%C3%BCller_hamster_ruso_Phodopus_sungorus_1.jpg), Warairarepano&amp;Guaicaipuro, CC BY-SA 3.0
+- 069.png: [Zwerghamster2.jpg](https://commons.wikimedia.org/wiki/File:Zwerghamster2.jpg), Mmemichi, CC BY-SA 3.0
+- 070.png: [Ջունգարական գերմանամուկ.jpg](https://commons.wikimedia.org/wiki/File:%D5%8B%D5%B8%D6%82%D5%B6%D5%A3%D5%A1%D6%80%D5%A1%D5%AF%D5%A1%D5%B6_%D5%A3%D5%A5%D6%80%D5%B4%D5%A1%D5%B6%D5%A1%D5%B4%D5%B8%D6%82%D5%AF.jpg), DinaS, CC BY-SA 4.0
+- 071.png: [Ջունգարիկի սննդացանկ.jpg](https://commons.wikimedia.org/wiki/File:%D5%8B%D5%B8%D6%82%D5%B6%D5%A3%D5%A1%D6%80%D5%AB%D5%AF%D5%AB_%D5%BD%D5%B6%D5%B6%D5%A4%D5%A1%D6%81%D5%A1%D5%B6%D5%AF.jpg), DinaS, CC BY-SA 4.0
+- 072.png: [餌を食べるジャンガリアンハムスター.png](https://commons.wikimedia.org/wiki/File:%E9%A4%8C%E3%82%92%E9%A3%9F%E3%81%B9%E3%82%8B%E3%82%B8%E3%83%A3%E3%83%B3%E3%82%AC%E3%83%AA%E3%82%A2%E3%83%B3%E3%83%8F%E3%83%A0%E3%82%B9%E3%82%BF%E3%83%BC.png), Obstagoon, CC BY-SA 4.0
+- 073.png: [Dwarf roborovski hamster.jpg](https://commons.wikimedia.org/wiki/File:Dwarf_roborovski_hamster.jpg), Monbro at English Wikipedia, Public domain
+- 074.png: [Phodopus roborovskii female by Takaaka.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_roborovskii_female_by_Takaaka.jpg), Takaaka92, CC BY 3.0
+- 075.png: [Phodopus roborovskii front.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_roborovskii_front.jpg), Bullet, CC BY-SA 3.0
+- 076.png: [Phodopus roborovskii sand.JPG](https://commons.wikimedia.org/wiki/File:Phodopus_roborovskii_sand.JPG), Bulli, CC BY-SA 3.0
+- 077.png: [Phodopus roborovskii side.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_roborovskii_side.jpg), Bullet, CC BY-SA 3.0
+- 078.png: [Phodopus roborovskii.jpg](https://commons.wikimedia.org/wiki/File:Phodopus_roborovskii.jpg), Bullet, CC BY-SA 3.0
+- 079.png: [Photo of Roborovski Hamster.jpg](https://commons.wikimedia.org/wiki/File:Photo_of_Roborovski_Hamster.jpg), Roborovskihamsters at en.wikipedia, Public domain
+- 080.png: [Roborofskiohamster.jpg](https://commons.wikimedia.org/wiki/File:Roborofskiohamster.jpg), Dalius Baranauskas, CC BY 3.0
+- 081.png: [Roborovski - Normalised.jpg](https://commons.wikimedia.org/wiki/File:Roborovski_-_Normalised.jpg), w:User:Cambridge University, Public domain
+- 082.png: [Roborovski Hamster eating.jpg](https://commons.wikimedia.org/wiki/File:Roborovski_Hamster_eating.jpg), Dalius Baranauskas, CC BY 3.0
+- 083.png: [Roborovszkij-törpehörcsög 1.jpg](https://commons.wikimedia.org/wiki/File:Roborovszkij-t%C3%B6rpeh%C3%B6rcs%C3%B6g_1.jpg), Ceruza, CC BY-SA 3.0
+- 084.png: [Roborowski Zwerghamster 002.JPG](https://commons.wikimedia.org/wiki/File:Roborowski_Zwerghamster_002.JPG), Andreas Fink (andreas-fink@gmx.de), CC BY-SA 2.5
+- 085.png: [Susu The Hamster Roby.JPG](https://commons.wikimedia.org/wiki/File:Susu_The_Hamster_Roby.JPG), w:User:Cambridge University, Public domain
+- 086.png: [Whitefacedrobo.jpg](https://commons.wikimedia.org/wiki/File:Whitefacedrobo.jpg), Mastawindu, CC0
+- 087.png: [Zippy the Roborovski "Robo" Hamster.jpg](https://commons.wikimedia.org/wiki/File:Zippy_the_Roborovski_%22Robo%22_Hamster.jpg), Scherer007, CC BY-SA 3.0
+- 088.png: [Хомячок Роборовского.jpg](https://commons.wikimedia.org/wiki/File:%D0%A5%D0%BE%D0%BC%D1%8F%D1%87%D0%BE%D0%BA_%D0%A0%D0%BE%D0%B1%D0%BE%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE.jpg), Avustfel, CC BY-SA 4.0
+- 089.png: [スノーホワイト.jpg](https://commons.wikimedia.org/wiki/File:%E3%82%B9%E3%83%8E%E3%83%BC%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88.jpg), Zousaniine, CC BY-SA 4.0
+- 090.png: [スーパーホワイト.jpg](https://commons.wikimedia.org/wiki/File:%E3%82%B9%E3%83%BC%E3%83%91%E3%83%BC%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88.jpg), Zousaniine, CC BY-SA 4.0
+- 091.png: [ノーマル２.jpg](https://commons.wikimedia.org/wiki/File:%E3%83%8E%E3%83%BC%E3%83%9E%E3%83%AB%EF%BC%92.jpg), Zousaniine, CC BY-SA 4.0
+- 092.png: [ピュアホワイのト赤ちゃん２.jpg](https://commons.wikimedia.org/wiki/File:%E3%83%94%E3%83%A5%E3%82%A2%E3%83%9B%E3%83%AF%E3%82%A4%E3%81%AE%E3%83%88%E8%B5%A4%E3%81%A1%E3%82%83%E3%82%93%EF%BC%92.jpg), Zousaniine, CC BY-SA 4.0
+- 093.png: [ヘッドスポット.jpg](https://commons.wikimedia.org/wiki/File:%E3%83%98%E3%83%83%E3%83%89%E3%82%B9%E3%83%9D%E3%83%83%E3%83%88.jpg), Zousaniine, CC BY-SA 4.0
+- 094.png: [Campbell hamster female.jpg](https://commons.wikimedia.org/wiki/File:Campbell_hamster_female.jpg), Wenliang1107 at Chinese Wikipedia, Public domain
+- 095.png: [Campbell's Hamster (redeys).jpg](https://commons.wikimedia.org/wiki/File:Campbell%27s_Hamster_(redeys).jpg), ja:User:Huugo, CC BY-SA 4.0
+- 096.png: [Cricetidae Phodopus campbelli 4.jpg](https://commons.wikimedia.org/wiki/File:Cricetidae_Phodopus_campbelli_4.jpg), NasserHalaweh, CC BY-SA 4.0
+- 097.png: [Dwarf campbell hamster male 2012.jpg](https://commons.wikimedia.org/wiki/File:Dwarf_campbell_hamster_male_2012.jpg), Alexander theo redgrave, CC BY-SA 3.0
+- 098.png: [A domesticated Cricetulus griseus.JPG](https://commons.wikimedia.org/wiki/File:A_domesticated_Cricetulus_griseus.JPG), Natuur12, CC BY 4.0
+- 099.png: [Chinese Hamster.jpg](https://commons.wikimedia.org/wiki/File:Chinese_Hamster.jpg), Reinoutr, CC BY-SA 3.0
+- 100.png: [500px photo (24009539).jpeg](https://commons.wikimedia.org/wiki/File:500px_photo_(24009539).jpeg), Alexander Bubliy, CC BY 3.0
+- 101.png: [Auswilderung von Feldhamstern im LSG Straßenheimer Hof 02.jpg](https://commons.wikimedia.org/wiki/File:Auswilderung_von_Feldhamstern_im_LSG_Stra%C3%9Fenheimer_Hof_02.jpg), Stephan Sprinz, CC BY 4.0
+- 102.png: [C.cricetus Lublin1.jpg](https://commons.wikimedia.org/wiki/File:C.cricetus_Lublin1.jpg), Agnieszka Szeląg, CC BY-SA 3.0
+- 103.png: [Common hamster (25340844024).jpg](https://commons.wikimedia.org/wiki/File:Common_hamster_(25340844024).jpg), Thomas Hirsch, CC BY-SA 2.0
+- 104.png: [Cricetus cricetus - (Lubin, Poland)-cropped.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_(Lubin,_Poland)-cropped.jpg), Agnieszka Szeląg, CC BY-SA 3.0
+- 105.png: [Cricetus cricetus - Feldhamster - 1120 Wien 10.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_10.jpg), SgH Vienna, CC BY-SA 4.0
+- 106.png: [Cricetus cricetus - Feldhamster - 1120 Wien 12.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_12.jpg), SgH Vienna, CC BY-SA 4.0
+- 107.png: [Cricetus cricetus - Feldhamster - 1120 Wien 14.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_14.jpg), SgH Vienna, CC BY-SA 4.0
+- 108.png: [Cricetus cricetus - Feldhamster - 1120 Wien 17.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_17.jpg), SgH Vienna, CC BY-SA 4.0
+- 109.png: [Cricetus cricetus - Feldhamster - 1120 Wien 2.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_2.jpg), SgH Vienna, CC BY-SA 4.0
+- 110.png: [Cricetus cricetus - Feldhamster - 1120 Wien 22.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_22.jpg), SgH Vienna, CC BY-SA 4.0
+- 111.png: [Cricetus cricetus - Feldhamster - 1120 Wien 3.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_3.jpg), SgH Vienna, CC BY-SA 4.0
+- 112.png: [Cricetus cricetus - Feldhamster - 1120 Wien 5.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_5.jpg), SgH Vienna, CC BY-SA 4.0
+- 113.png: [Cricetus cricetus - Feldhamster - 1120 Wien 9.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien_9.jpg), SgH Vienna, CC BY-SA 4.0
+- 114.png: [Cricetus cricetus - Feldhamster - 1120 Wien.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Feldhamster_-_1120_Wien.jpg), SgH Vienna, CC BY-SA 4.0
+- 115.png: [Cricetus cricetus - Senckenberg Naturhistorische Sammlungen Dresden - DSC08206.JPG](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_-_Senckenberg_Naturhistorische_Sammlungen_Dresden_-_DSC08206.JPG), Daderot, CC0
+- 116.png: [Cricetus cricetus 547959738.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_547959738.jpg), Oleg Kosterin, CC BY 4.0
+- 117.png: [Cricetus cricetus 606839406.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_606839406.jpg), Johannes S., CC BY 4.0
+- 118.png: [Cricetus cricetus 668984854.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_668984854.jpg), Полина Полежанкина, CC BY 4.0
+- 119.png: [Cricetus cricetus 668986074.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_668986074.jpg), Полина Полежанкина, CC BY 4.0
+- 120.png: [Cricetus cricetus 673594775.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_673594775.jpg), Barry Stewart, CC BY 4.0
+- 121.png: [Cricetus cricetus 675490393.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_675490393.jpg), Алёна Осипова, CC BY 4.0
+- 122.png: [Cricetus cricetus 693259205.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_693259205.jpg), Vsevolod Rudyi, CC BY 4.0
+- 123.png: [Cricetus cricetus Austria 2.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_Austria_2.jpg), SgH Vienna, CC BY-SA 4.0
+- 124.png: [Cricetus cricetus Austria 4.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_Austria_4.jpg), Charles J. Sharp, CC BY-SA 4.0
+- 125.png: [Cricetus cricetus Crimea 2.jpg](https://commons.wikimedia.org/wiki/File:Cricetus_cricetus_Crimea_2.jpg), Bogomolov.PL, CC BY-SA 4.0
+- 126.png: [European hamster (Cricetus cricetus) Meidling 2.jpg](https://commons.wikimedia.org/wiki/File:European_hamster_(Cricetus_cricetus)_Meidling_2.jpg), Charles J. Sharp, CC BY-SA 4.0
+- 127.png: [European hamster (Cricetus cricetus) Meidling 3.jpg](https://commons.wikimedia.org/wiki/File:European_hamster_(Cricetus_cricetus)_Meidling_3.jpg), Charles J. Sharp, CC BY-SA 4.0
+- 128.png: [European hamster (Cricetus cricetus) Meidling.jpg](https://commons.wikimedia.org/wiki/File:European_hamster_(Cricetus_cricetus)_Meidling.jpg), Charles J. Sharp, CC BY-SA 4.0
+- 129.png: [European Hamster (cropped to head).jpg](https://commons.wikimedia.org/wiki/File:European_Hamster_(cropped_to_head).jpg), Charles J. Sharp, CC BY-SA 4.0
+- 130.png: [Grand-Hamster.jpg](https://commons.wikimedia.org/wiki/File:Grand-Hamster.jpg), Frédéric BURNER, Public domain
+- 131.png: [Oggetto MuSe 006.JPG](https://commons.wikimedia.org/wiki/File:Oggetto_MuSe_006.JPG), Dega180, CC0
+- 132.png: [Female Phodopus sungorus.jpg](https://commons.wikimedia.org/wiki/File:Female_Phodopus_sungorus.jpg), WikiNinjaHamster, CC0
