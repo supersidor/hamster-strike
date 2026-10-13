@@ -18,6 +18,8 @@ npm run check     # tools/check.mjs (every map: markers, sizes, slopes, reachabi
 npm run assets    # tools/convert-assets.sh: PNG -> WebP, WAV -> mono 32 kHz WAV, FBX -> weapons.json/.bin, copies maps into src/maps
 ```
 
+A `Makefile` wraps these for local testing: `make dev` (solo), `make debug` (opens `/?debug`), `make online` (game server + vite together, opens `/?online`), `make serve` (build + production server on :8080), `make build`, `make check`, `make assets`; `make help` lists them.
+
 ## Deploy
 
 Runs on the k3s homelab. A push triggers `.github/workflows/push.yaml` (`npm run check`, then a multi-arch image `supersidor/hamster-strike:<short sha>` on Docker Hub). The `Dockerfile` builds `dist/` with Node, then runs `node server/index.mjs` (port 8080) in `node:22-alpine`: it serves `dist/` (same cache headers as the old nginx) and the `/ws` WebSocket of the single online room. `chart/` is a minimal Helm chart (Deployment with `replicas: 1` and `Recreate`, because the room lives in memory; Service; Ingress at `hamster-strike.homelab` with 3600 s proxy timeouts for the WebSocket); the ArgoCD Application lives in `~/hobby/argocd/apps/services/hamster-strike.yaml` and passes `image.tag=$ARGOCD_APP_REVISION_SHORT`. The public hostname is added by hand in the Cloudflare tunnel dashboard, pointing at `http://hamster-strike.hamster-strike.svc.cluster.local:80` (the tunnel passes WebSockets).
