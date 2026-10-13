@@ -9,6 +9,7 @@ export class Soldier {
     this.yaw = 0;
     this.pitch = 0;
     this.crouch = false;
+    this.dog = false;
     this.weapon = 'usp';
     this.eyeHeight = D.PLAYER_EYE;
     this.hp = 100;

@@ -218,6 +218,7 @@ class NetClient {
     }
     Game.resetMatchStats();
     Game.resetRoundState();
+    Game.ensureAmmo(Game.secondary);
     for (const cell of m.barrels) world.removeBarrel(cell);
     Game.result = m.result;
     Game.reason = m.reason;
@@ -490,6 +491,7 @@ class NetClient {
       r.ping = row[17];
       r.crouch = row[6] === 1;
       r.weapon = row[7];
+      r.dog = row[19] === 1;
       r.track.push(now, [row[1], row[2], row[3], row[4], row[5]]);
     }
     for (const id of [...this.remotes.keys()]) if (!seen.has(id)) this.removeRemote(id);
@@ -547,7 +549,7 @@ class NetClient {
       s.eyeHeight = s.crouch ? D.PLAYER_CROUCH_EYE : D.PLAYER_EYE;
       const a = s.avatar;
       if (!a) continue;
-      a.pose(s.position, s.yaw, s.pitch, s.crouch, s.weapon);
+      a.pose(s.position, s.yaw, s.pitch, s.crouch, s.weapon, s.dog);
       a.object.visible = s.hp > 0 && s !== this.watching && Game.phase !== 'title';
       a.update(dt, world.camera);
     }
@@ -564,6 +566,7 @@ class NetClient {
         cr: p.crouching ? 1 : 0,
         w: Game.current,
         df: Game.me.defusing ? 1 : 0,
+        dg: Game.me.dog ? 1 : 0,
         pg: Math.round(this.rtt),
       });
     }

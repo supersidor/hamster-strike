@@ -1,4 +1,4 @@
-.PHONY: help install dev debug online build serve check assets ak47 clean
+.PHONY: help install dev debug online build serve check assets ak47 dog clean
 
 help:
 	@echo "make install  - npm install"
@@ -10,6 +10,7 @@ help:
 	@echo "make check    - map checks + headless net test"
 	@echo "make assets   - convert assets from ../petro3d"
 	@echo "make ak47     - convert the AK-47 model from ~/Downloads/ak-47-assault-rifle.zip (ZIP=...)"
+	@echo "make dog      - convert the dog model from ~/Downloads/dog.zip (ZIP=...)"
 
 node_modules: package.json package-lock.json
 	npm install
@@ -40,6 +41,9 @@ assets:
 
 ak47: node_modules
 	bash tools/convert-ak47.sh $(ZIP)
+
+dog: node_modules
+	bash tools/convert-dog.sh $(ZIP)
 
 clean:
 	rm -rf dist

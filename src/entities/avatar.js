@@ -9,6 +9,10 @@ const PLANE = new THREE.PlaneGeometry(1, 1);
 const SHIRT = new THREE.MeshStandardMaterial({ color: srgb([0.18, 0.34, 0.72]), roughness: 0.75 });
 const PANTS = new THREE.MeshStandardMaterial({ color: srgb([0.16, 0.18, 0.24]), roughness: 0.8 });
 const SKIN = new THREE.MeshStandardMaterial({ color: srgb([0.93, 0.74, 0.6]), roughness: 0.8 });
+const STRAP = new THREE.MeshStandardMaterial({ color: srgb([0.12, 0.14, 0.1]), roughness: 0.9, side: THREE.DoubleSide });
+const METAL = new THREE.MeshStandardMaterial({ color: srgb([0.55, 0.55, 0.58]), roughness: 0.4, metalness: 0.8 });
+const BAND_GEO = new THREE.CylinderGeometry(1, 1, 0.045, 24, 1, true).rotateX(Math.PI / 2);
+const BUCKLE_GEO = new THREE.BoxGeometry(0.035, 0.03, 0.06);
 const FLASH_MAT = new THREE.MeshBasicMaterial({
   color: srgb([1.0, 0.8, 0.35]), transparent: true, opacity: 0.9, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false,
 });
@@ -24,6 +28,25 @@ function gunMaterial(assets, name) {
     gunMaterials.set(name, mat);
   }
   return gunMaterials.get(name);
+}
+
+function dogHarness() {
+  const group = new THREE.Group();
+  for (const z of [-0.2, 0.15]) {
+    const band = new THREE.Mesh(BAND_GEO, STRAP);
+    band.scale.set(0.165, 0.2, 1);
+    band.position.set(0, 0.49, z);
+    const buckle = new THREE.Mesh(BUCKLE_GEO, METAL);
+    buckle.position.set(0.165, 0.49, z);
+    group.add(band, buckle);
+  }
+  const spine = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.012, 0.4), STRAP);
+  spine.position.set(0, 0.69, -0.025);
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.025, 0.3), METAL);
+  plate.position.set(0, 0.71, -0.025);
+  group.add(spine, plate);
+  for (const m of group.children) m.castShadow = true;
+  return group;
 }
 
 function labelSprite(name) {
@@ -80,6 +103,10 @@ export class Avatar {
     this.arm.add(this.gunPivot);
     this.body.add(torso, legL, legR, armL, this.arm);
     for (const m of [torso, legL, legR, armL, armR]) m.castShadow = true;
+    this.humanParts = [torso, legL, legR, armL, armR, hand];
+    this.dog = false;
+    this.dogMesh = null;
+    this.harness = null;
 
     this.headMat = new THREE.MeshStandardMaterial({ map: assets.petro, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.9, metalness: 0 });
     this.head = new THREE.Mesh(PLANE, this.headMat);
@@ -95,7 +122,30 @@ export class Avatar {
     this.crouch = crouch;
     this.body.scale.y = crouch ? 0.7 : 1;
     this.head.position.y = crouch ? 1.2 : 1.55;
-    this.label.position.y = crouch ? 1.85 : 2.2;
+    if (this.dog) this.label.position.y = crouch ? 0.8 : 1.15;
+    else this.label.position.y = crouch ? 1.85 : 2.2;
+  }
+
+  setDog(on) {
+    if (on === this.dog) return;
+    this.dog = on;
+    if (on && !this.dogMesh) {
+      const { geometry, material } = this.assets.dog;
+      this.dogMesh = new THREE.Mesh(geometry, material);
+      this.dogMesh.castShadow = true;
+      this.body.add(this.dogMesh);
+    }
+    if (on && !this.harness) {
+      this.harness = dogHarness();
+      this.body.add(this.harness);
+    }
+    if (this.dogMesh) this.dogMesh.visible = on;
+    if (this.harness) this.harness.visible = on;
+    for (const m of this.humanParts) m.visible = !on;
+    this.head.visible = !on;
+    if (on) this.arm.position.set(0, 0.96, 0.2);
+    else this.arm.position.set(0.32, 1.12, 0);
+    this.setCrouch(this.crouch);
   }
 
   setWeapon(name) {
@@ -126,8 +176,9 @@ export class Avatar {
     this.flashT = 0.06;
   }
 
-  pose(pos, yaw, pitch, crouch, weapon) {
+  pose(pos, yaw, pitch, crouch, weapon, dog) {
     this.object.position.copy(pos);
+    this.setDog(dog);
     this.body.rotation.y = yaw;
     this.arm.rotation.x = Math.max(-1.2, Math.min(1.2, pitch)) * 0.8;
     if (crouch !== this.crouch) this.setCrouch(crouch);

@@ -100,11 +100,13 @@ export class Room {
     client.nadeCd = 0;
     if (wasEmpty) Game.toTitle();
     const live = Game.phase === 'live' || Game.phase === 'round_end';
-    const spots = world.spawnSpots(Game.soldiers.length);
-    world.placeSoldier(s, spots[spots.length - 1], world.startYaw());
-    if (live) {
-      s.hp = 0;
-      s.played = false;
+    const mate = live ? Game.soldiers.find((o) => o !== s && o.hp > 0) : null;
+    if (mate) {
+      const spots = world.spawnSpots(2, mate.position);
+      world.placeSoldier(s, spots[1], mate.yaw);
+    } else {
+      const spots = world.spawnSpots(Game.soldiers.length);
+      world.placeSoldier(s, spots[spots.length - 1], world.startYaw());
     }
     client.send(JSON.stringify(this.welcome(s)));
     return true;
@@ -189,6 +191,7 @@ export class Room {
     s.eyeHeight = s.crouch ? D.PLAYER_CROUCH_EYE : D.PLAYER_EYE;
     if (typeof m.w === 'string' && D.WEAPONS[m.w]) s.weapon = m.w;
     s.defusing = m.df === 1;
+    s.dog = m.dg === 1;
     if (finite(m.pg)) s.ping = Math.max(0, Math.min(999, Math.round(m.pg)));
   }
 

@@ -14,7 +14,7 @@ export function kingSpawn(k) {
 export function soldierRow(s) {
   return [
     s.id, r2(s.position.x), r2(s.position.y), r2(s.position.z), r2(s.yaw), r2(s.pitch), s.crouch ? 1 : 0, s.weapon,
-    s.hp, s.armor, s.kit ? 1 : 0, s.kills, s.deaths, s.headshots, s.mvps, r2(s.defuse), s.ready ? 1 : 0, s.ping, s.name,
+    s.hp, s.armor, s.kit ? 1 : 0, s.kills, s.deaths, s.headshots, s.mvps, r2(s.defuse), s.ready ? 1 : 0, s.ping, s.name, s.dog ? 1 : 0,
   ];
 }
 

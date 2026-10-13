@@ -94,6 +94,13 @@ export class Player {
       case 'KeyQ': this.wantSwitch = true; break;
       case 'KeyG': this.wantHe = true; break;
       case 'KeyF': this.wantSmoke = true; break;
+      case 'KeyH':
+        if (Game.playing()) {
+          Game.me.dog = !Game.me.dog;
+          Game.announce = Game.me.dog ? 'DOG MODE ON' : 'DOG MODE OFF';
+          Game.announceT = 1.5;
+        }
+        break;
       default: break;
     }
   }

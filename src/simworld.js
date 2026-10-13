@@ -59,9 +59,8 @@ export class SimWorld {
     return Math.atan2(-dx, -dz);
   }
 
-  spawnSpots(count) {
+  spawnSpots(count, start = this.level.playerStart) {
     const level = this.level;
-    const start = level.playerStart;
     const out = [start];
     for (let ring = 1; out.length < count && ring < 8; ring++) {
       const radius = ring * 1.1;

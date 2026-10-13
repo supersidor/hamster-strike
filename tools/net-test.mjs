@@ -50,7 +50,7 @@ function runMatch(label, clients, seconds) {
       if (!c.soldier || !c.pos) continue;
       const phase = room.Game.phase;
       if (Math.floor(t * 10) % 3 === 0) {
-        room.message(c, JSON.stringify({ t: 's', x: c.pos[0], y: c.pos[1], z: c.pos[2], yw: 0.5, pt: 0, cr: 0, w: 'ak47', df: room.Game.bombPlanted ? 1 : 0 }));
+        room.message(c, JSON.stringify({ t: 's', x: c.pos[0], y: c.pos[1], z: c.pos[2], yw: 0.5, pt: 0, cr: 0, w: 'ak47', df: room.Game.bombPlanted ? 1 : 0, dg: c.name === 'A' ? 1 : 0 }));
       }
       if (phase === 'buy') room.message(c, JSON.stringify({ t: 'ready' }));
       if (phase === 'live' && Math.floor(t * 120) % 20 === 0) {
@@ -84,6 +84,9 @@ for (let map = 0; map < level.maps.length; map++) {
   eq(room.Game.phase === 'match_end', `${label(map)} reached match_end (phase ${room.Game.phase}, round ${room.Game.round}, ${secs.toFixed(0)}s)`);
   for (const ph of ['buy', 'live', 'round_end']) eq(a.phases.has(ph), `${label(map)} saw phase ${ph}`);
   eq(a.kinds.has('king'), `${label(map)} king round happened`);
+  const rowOf = (c, id) => c.snap.s.find((r) => r[0] === id);
+  eq(rowOf(b, a.id)[19] === 1, `${label(map)} B sees A as a dog`);
+  eq(rowOf(a, b.id)[19] === 0, `${label(map)} A does not see B as a dog`);
   const scored = room.Game.soldiers.reduce((n, s) => n + s.kills, 0);
   eq(scored > 0, `${label(map)} players got kills`);
   console.log(`net ok: ${level.mapName} ${secs.toFixed(0)}s CT ${room.Game.ct}:${room.Game.t} kills ${scored}`);
@@ -106,7 +109,9 @@ for (let i = 0; i < 300; i++) { clock += STEP_MS; room.tick(); }
 eq(room.Game.phase === 'live', 'solo player in the room goes live when ready');
 const late = makeClient('Late');
 room.join(late, '<b>Late</b>');
-eq(late.soldier.hp === 0 && !late.soldier.played, 'a player joining mid-round spectates');
+eq(late.soldier.hp === 100 && late.soldier.played, 'a player joining mid-round plays right away');
+const lateGap = Math.hypot(late.soldier.position.x - p1.soldier.position.x, late.soldier.position.z - p1.soldier.position.z);
+eq(lateGap < 4 && Math.abs(late.soldier.position.y - p1.soldier.position.y) < 0.5, `a late joiner spawns next to a teammate on the same level (gap ${lateGap.toFixed(1)}, dy ${(late.soldier.position.y - p1.soldier.position.y).toFixed(2)})`);
 eq(late.soldier.name === 'bLate/b' || !/[<>]/.test(late.soldier.name), 'names are sanitised');
 eq(late.inbox[0].t === 'welcome' && late.inbox[0].hs.length > 0, 'late joiner gets the live hamsters');
 room.message(p1, '{"t":"s","x":"boom"}');

@@ -64,6 +64,17 @@ async function loadAk47Material(base) {
   return new THREE.MeshStandardMaterial({ map, normalMap, aoMap, roughnessMap, metalnessMap, roughness: 1, metalness: 1 });
 }
 
+async function loadDog(base) {
+  const meshes = {};
+  const [, map] = await Promise.all([
+    loadWeaponMeshes(`${base}models/dog`, meshes),
+    loadTexture(`${base}models/dog_albedo.webp`),
+  ]);
+  map.flipY = false;
+  const material = new THREE.MeshStandardMaterial({ map, roughness: 0.85, metalness: 0, side: THREE.DoubleSide });
+  return { geometry: meshes.Dog, material };
+}
+
 async function loadWeapons(base) {
   const meshes = {};
   const [, , palette, ak47, canister] = await Promise.all([
@@ -80,7 +91,7 @@ async function loadWeapons(base) {
 export async function loadAssets(base, onProgress) {
   const index = await (await fetch(`${base}hamsters/index.json`)).json();
   const rects = await (await fetch(`${base}hamsters/rects.json`)).json();
-  const total = index.length + 5;
+  const total = index.length + 6;
   let done = 0;
   const tick = () => onProgress(++done / total);
 
@@ -98,8 +109,9 @@ export async function loadAssets(base, onProgress) {
   const hamster = loadTexture(`${base}hamster.webp`).then((t) => { tick(); return t; });
   const petro = loadTexture(`${base}petro.webp`).then((t) => { tick(); return t; });
   const weapons = loadWeapons(base).then((w) => { tick(); return w; });
+  const dog = loadDog(base).then((d) => { tick(); return d; });
   const audio = Audio.load(base).then(() => tick());
   await Promise.all([hamsters, audio]);
   tick();
-  return { hamsterPool, hamsterByName, hamster: await hamster, petro: await petro, ...(await weapons) };
+  return { hamsterPool, hamsterByName, hamster: await hamster, petro: await petro, dog: await dog, ...(await weapons) };
 }
