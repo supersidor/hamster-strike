@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hamster-strike
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.host }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hamster-strike
+                port:
+                  number: 80

@@ -17,6 +17,10 @@ npm run check     # tools/check.mjs: every map (markers, sizes, slopes, reachabi
 npm run assets    # tools/convert-assets.sh: PNG -> WebP, WAV -> mono 32 kHz WAV, FBX -> weapons.json/.bin, copies maps into src/maps
 ```
 
+## Deploy
+
+Runs on the k3s homelab. A push triggers `.github/workflows/push.yaml` (`npm run check`, then a multi-arch image `supersidor/hamster-strike:<short sha>` on Docker Hub). The `Dockerfile` builds with Node and serves `dist/` with nginx on port 8080 (`nginx.conf`). `chart/` is a minimal Helm chart (Deployment, Service, Ingress at `hamster-strike.homelab`); the ArgoCD Application lives in `~/hobby/argocd/apps/services/hamster-strike.yaml` and passes `image.tag=$ARGOCD_APP_REVISION_SHORT`. The public hostname is added by hand in the Cloudflare tunnel dashboard, pointing at `http://hamster-strike.hamster-strike.svc.cluster.local:80`.
+
 `tools/bot-test.js` is an aimbot that plays whole matches in the page: with the dev server running, open `/?debug` and run `eval(await (await fetch('/tools/bot-test.js')).text())` in the console (or through the browser tool); it returns a JSON report (rounds, kills, kinds seen, errors). Run it on all maps after touching game logic.
 
 ## Architecture (`src/`)
