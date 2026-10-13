@@ -4,7 +4,7 @@ First-person Counter-Strike parody in the browser: Petro (CT) vs the Hamster-Ter
 
 ```bash
 npm install
-npm run dev       # http://localhost:5173  (add ?debug to skip pointer lock and expose window.cs)
+npm run dev       # http://localhost:5173  (add ?debug to stay solo, skip pointer lock and expose window.cs)
 npm run build     # static site in dist/
 npm run preview   # serve dist/ locally
 npm run server    # online room + static files on :8080 (needs npm run build for the page itself)
@@ -14,7 +14,7 @@ npm run assets    # re-convert assets from ../petro3d (needs cwebp, afconvert, j
 
 ## Online co-op
 
-Press O on the title screen to join the public room (or open `/?online`): up to 8 players fight the same hamster waves and the King together. In development run `npm run server` and `npm run dev` side by side (vite proxies `/ws`). `npm run build && npm start` serves the game and the room from one Node process.
+The page joins the public room on load (open `/?solo` to stay offline; if the server is unreachable it falls back to the solo title screen, where O retries): up to 8 players fight the same hamster waves and the King together. In development run `npm run server` and `npm run dev` side by side (vite proxies `/ws`). `npm run build && npm start` serves the game and the room from one Node process.
 
 ## Deploying
 

@@ -2,7 +2,7 @@
 
 help:
 	@echo "make install  - npm install"
-	@echo "make dev      - vite dev server on :5173 (solo)"
+	@echo "make dev      - vite dev server on :5173 (no game server, falls back to solo)"
 	@echo "make debug    - dev server, opens /?debug"
 	@echo "make online   - game server (:8080) + vite dev server (/ws proxied)"
 	@echo "make build    - build dist/"
@@ -24,7 +24,7 @@ debug: node_modules
 	npm run dev -- --open /?debug
 
 online: node_modules
-	@trap "kill 0" INT TERM EXIT; npm run server & npm run dev -- --open /?online & wait
+	@trap "kill 0" INT TERM EXIT; npm run server & npm run dev -- --open / & wait
 
 build: node_modules
 	npm run build

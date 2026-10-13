@@ -11,7 +11,7 @@ Browser port (three.js + Vite, plain JS modules, no physics engine) of the Godot
 ## Commands
 
 ```bash
-npm run dev       # vite dev server; /?debug skips pointer lock and exposes window.cs = { Game, world, THREE, Input, Audio, renderer, hud }
+npm run dev       # vite dev server; /?debug stays solo, skips pointer lock and exposes window.cs = { Game, world, THREE, Input, Audio, renderer, hud }
 npm run build     # dist/, static, relative paths
 npm run server    # node server/index.mjs on :8080 (online room + serves dist/); vite proxies /ws to it, so run both for online dev
 npm run check     # tools/check.mjs (every map: markers, sizes, slopes, reachability incl. sites and route waypoints, collision/raycast/flow-field-walk, King walk to both sites) + tools/net-test.mjs (headless 2-player room matches on every map)
@@ -19,7 +19,7 @@ npm run assets    # tools/convert-assets.sh: PNG -> WebP, WAV -> mono 32 kHz WAV
 npm run map       # tools/convert-maps.sh: every mapsrc/<map>/ -> public/maps/<dir>/*.webp + src/maps/<file>.json/.bin (extra args go to convert-map.mjs, e.g. --preview /tmp/nav.png)
 ```
 
-A `Makefile` wraps these for local testing: `make dev` (solo), `make debug` (opens `/?debug`), `make online` (game server + vite together, opens `/?online`), `make serve` (build + production server on :8080), `make build`, `make check`, `make assets`, `make ak47`; `make help` lists them.
+A `Makefile` wraps these for local testing: `make dev` (no game server, so the page falls back to solo), `make debug` (opens `/?debug`), `make online` (game server + vite together), `make serve` (build + production server on :8080), `make build`, `make check`, `make assets`, `make ak47`; `make help` lists them.
 
 `make ak47` (`tools/convert-ak47.sh [zip]`, default `~/Downloads/ak-47-assault-rifle.zip`) converts the detailed AK-47: `tools/convert-gun.mjs <obj> <outbase> <name>` merges the OBJ groups, re-axes them to the FBX weapon layout (length on +X with the muzzle at max x, up on +Z) and writes `public/weapons/ak47.json/.bin` (same manifest format as `weapons.json`, mesh `AK47`); the PBR textures become `public/weapons/ak47_{albedo,normal}.webp` (2048) and `ak47_{ao,roughness,metallic}.webp` (1024). Only these outputs are committed, not the zip.
 
@@ -42,7 +42,7 @@ A mesh map is a real triangle mesh (de_dust2 is the CS 1.6 BSP exported to OBJ b
 
 ## Online co-op
 
-Press O on the title screen (or open `/?online`, `?name=Alice`, `?server=ws://host/ws`) to join the one public room: 2-8 Petros fight the same hamster waves and King (no friendly fire). Waves are `ROUND_WAVES * (1 + COOP_WAVE * (n-1))`, King HP `BOSS_HP * (1 + COOP_BOSS * (n-1))` (n = living players at round start). The CT side loses when everyone is dead, the bomb explodes or time runs out. Anyone can pick the map / start in `title` and `match_end`; in `buy` the round goes live when all players pressed Space or the timer ends. Someone joining mid-round spectates (click cycles teammates) until the next freeze. When the room empties it returns to `title`.
+The page joins the one public room on load (`?name=Alice`, `?server=ws://host/ws`; `?solo` or `?debug` stay offline; if the server is unreachable or you leave with X it shows the solo title screen, where O joins again): 2-8 Petros fight the same hamster waves and King (no friendly fire). Waves are `ROUND_WAVES * (1 + COOP_WAVE * (n-1))`, King HP `BOSS_HP * (1 + COOP_BOSS * (n-1))` (n = living players at round start). The CT side loses when everyone is dead, the bomb explodes or time runs out. Anyone can pick the map / start in `title` and `match_end`; in `buy` the round goes live when all players pressed Space or the timer ends. Someone joining mid-round spectates (click cycles teammates) until the next freeze. When the room empties it returns to `title`.
 
 - **Roles** (`Game.role`): `solo` (everything local), `server` (headless authority, `Game.visual = false`), `client` (`Game.authority = false`: only animates replicas). `Game.sink` (server) emits events, `Game.out` (client) sends messages; `Game.feedback(soldier, msg)` is the per-player cue (hit marker, kill streak, hurt, death loadout reset) and runs locally in solo.
 - **Authority**: the client owns its own movement, aim, weapons, ammo and hitscan and sends `s` (30 Hz state), `hit {id, w, hs, d}` / `hit {k:1,...}` for the King, `ignite`, `shot` (relayed as tracers/muzzle flash), `nade`, `buy`, `ready`, `map`, `start`, `ping`. The server owns hamsters, King, nuts, grenade damage, barrels, bomb, defuse progress, hp/armor/kit/score and all timers; damage comes from `D.WEAPONS[w]`, never from the client. Hits are range- and rate-checked (`Room.onHit`), names are sanitised, JSON frames max 16 KB, 200 msg/s per client.

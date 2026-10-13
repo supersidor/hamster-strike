@@ -122,7 +122,7 @@ async function boot() {
       }
     };
   }
-  if (params.has('online')) Net.connect();
+  if (!debug && !params.has('solo')) Net.connect();
 }
 
 boot().catch((err) => {
