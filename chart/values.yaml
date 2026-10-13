@@ -2,6 +2,4 @@ image:
   repository: supersidor/hamster-strike
   tag: ""
 
-replicas: 2
-
 host: hamster-strike.homelab

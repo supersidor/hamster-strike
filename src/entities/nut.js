@@ -13,6 +13,7 @@ const B = new THREE.Vector3();
 
 export class Nut {
   constructor(pos, dir, speed, dmg = 20) {
+    this.id = 0;
     this.velocity = dir.clone().normalize().multiplyScalar(speed);
     this.dmg = dmg;
     this.life = 3.0;
@@ -37,7 +38,7 @@ export class Nut {
     const to = from.clone().addScaledVector(this.velocity, dt);
     const hit = world.collision.raycast(from, to, true);
     if (hit) {
-      if (hit.barrel) Game.ignite(hit.barrel);
+      if (hit.barrel && Game.authority) Game.ignite(hit.barrel, 0, null);
       this.dead = true;
       return;
     }
@@ -45,13 +46,19 @@ export class Nut {
     this.object.rotation.x += this.spin.x * dt;
     this.object.rotation.y += this.spin.y * dt;
     this.object.rotation.z += this.spin.z * dt;
-    const p = Game.playerPos();
-    A.set(p.x, p.y + 0.2, p.z);
-    B.set(p.x, p.y + 1.7, p.z);
-    if (segmentDistance(to, A, B) < D.PLAYER_R + 0.15) {
-      this.dead = true;
-      Game.hurtPlayer(this.dmg, 'Hamster');
-      return;
+    if (Game.authority) {
+      for (const s of Game.soldiers) {
+        if (s.hp <= 0) continue;
+        const p = s.position;
+        A.set(p.x, p.y + 0.2, p.z);
+        B.set(p.x, p.y + 1.7, p.z);
+        if (segmentDistance(to, A, B) < D.PLAYER_R + 0.15) {
+          this.dead = true;
+          Game.emit({ t: 'nx', id: this.id });
+          Game.hurtSoldier(s, this.dmg, 'Hamster');
+          return;
+        }
+      }
     }
     if (this.life <= 0) this.dead = true;
   }

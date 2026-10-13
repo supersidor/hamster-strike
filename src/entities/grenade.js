@@ -12,7 +12,9 @@ const BODY = new THREE.CylinderGeometry(0.08, 0.08, 0.2, 12);
 const CAP = new THREE.BoxGeometry(0.06, 0.06, 0.1);
 
 export class Grenade {
-  constructor(pos, vel, smoke) {
+  constructor(pos, vel, smoke, owner = null) {
+    this.id = 0;
+    this.owner = owner;
     this.smoke = smoke;
     this.fuse = smoke ? 1.9 : 1.6;
     this.velocity = vel.clone();
@@ -30,7 +32,8 @@ export class Grenade {
   update(dt, world) {
     this.fuse -= dt;
     if (this.fuse <= 0) {
-      this.detonate(world);
+      if (Game.authority) this.detonate(world);
+      else this.dead = true;
       return;
     }
     const v = this.velocity;
@@ -75,10 +78,11 @@ export class Grenade {
     }
     world.explosionFx(pos, 1.0);
     Audio.playAt('explosion', 0.8, pos);
-    Game.blast(pos, 'HE Grenade', D.HE_RADIUS, D.HE_DMG, D.HE_RADIUS + 1.5, 8);
-    const pp = Game.playerPos();
-    if (flatDist(pp, pos) < D.HE_SELF_RADIUS && Math.abs(pp.y - pos.y) < D.HE_SELF_RADIUS) {
-      Game.hurtPlayer(D.HE_SELF_DMG, "Petro's own grenade");
+    const owner = this.owner || Game.me;
+    Game.blast(pos, 'HE Grenade', D.HE_RADIUS, D.HE_DMG, D.HE_RADIUS + 1.5, 8, owner);
+    const pp = owner.position;
+    if (owner.hp > 0 && flatDist(pp, pos) < D.HE_SELF_RADIUS && Math.abs(pp.y - pos.y) < D.HE_SELF_RADIUS) {
+      Game.hurtSoldier(owner, D.HE_SELF_DMG, `${owner.name}'s own grenade`);
     }
   }
 }

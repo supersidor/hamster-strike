@@ -16,11 +16,13 @@ const LED_GEO = new THREE.SphereGeometry(0.04, 8, 6);
 const LASER_GEO = new THREE.BoxGeometry(0.025, 0.025, 1);
 const tmpDir = new THREE.Vector3();
 const tmpSteer = new THREE.Vector3();
+const tmpMouth = new THREE.Vector3();
 
 export class Hamster {
   constructor(speed, spitTime, kind, texture) {
     const spec = D.HAMSTER_KINDS[kind];
     this.isHamster = true;
+    this.id = 0;
     this.kind = kind;
     this.texture = texture;
     this.speed = speed * spec.speed;
@@ -49,6 +51,7 @@ export class Hamster {
     this.corpseT = 0;
     this.spin = 0;
     this.flip = 1;
+    this.aimTarget = new THREE.Vector3();
     this.build();
   }
 
@@ -147,17 +150,19 @@ export class Hamster {
 
   knockHelmet(dmg) {
     this.helmetHp -= dmg;
-    Audio.playAt('metal', 0.7, this.position);
-    if (!this.clanked) {
-      this.clanked = true;
-      Game.world.floatText({ x: this.position.x, y: this.position.y + this.size + 0.3, z: this.position.z }, 'CLANG', [0.8, 0.85, 0.9], 80);
+    if (Game.visual) {
+      Audio.playAt('metal', 0.7, this.position);
+      if (!this.clanked) {
+        this.clanked = true;
+        Game.world.floatText({ x: this.position.x, y: this.position.y + this.size + 0.3, z: this.position.z }, 'CLANG', [0.8, 0.85, 0.9], 80);
+      }
     }
     if (this.helmetHp > 0) return;
     const at = new THREE.Vector3();
     this.helmet.getWorldPosition(at);
     this.visual.remove(this.helmet);
     this.helmet = null;
-    Game.world.burst(at, [[0.36, 0.42, 0.3], [0.7, 0.7, 0.7]], 10, 4.0, 0.08, 0.6);
+    if (Game.visual) Game.world.burst(at, [[0.36, 0.42, 0.3], [0.7, 0.7, 0.7]], 10, 4.0, 0.08, 0.6);
   }
 
   dispose() {
@@ -199,11 +204,16 @@ export class Hamster {
       this.corpse(dt, world);
       return;
     }
+    if (Game.authority) this.think(dt, world);
+    if (Game.visual) this.animate(dt, world);
+  }
+
+  animate(dt, world) {
     const t = Game.now();
-    const level = world.level;
     const cam = world.camera;
     const pos = this.position;
     this.visual.rotation.y = Math.atan2(cam.position.x - pos.x, cam.position.z - pos.z);
+    if (!Game.authority && this.shield > 0) this.shield = Math.max(0, this.shield - dt);
 
     if (this.shield > 0) {
       this.useBlend(true);
@@ -217,7 +227,25 @@ export class Hamster {
     }
     this.flash = Math.max(0, this.flash - dt);
     this.pack.visible = this.carrier;
+    if (this.laser) this.updateLaser(pos);
     if (!Game.active()) return;
+
+    const moving = this.move.length() > 0.05;
+    const squish = moving ? Math.sin(t * 14 + this.phase) * 0.06 : Math.sin(t * 4 + this.phase) * 0.03;
+    if (moving) {
+      const right = Math.cos(this.visual.rotation.y);
+      const rightZ = -Math.sin(this.visual.rotation.y);
+      this.flip = (right * this.move.x + rightZ * this.move.z) > 0 ? -1 : 1;
+    }
+    this.sprite.scale.set(this.baseScale.x * (1 + squish) * this.flip, this.baseScale.y * (1 - squish), 1);
+    this.sprite.rotation.z = moving ? Math.sin(t * 10 + this.phase) * 0.08 : 0;
+  }
+
+  think(dt, world) {
+    if (!Game.active()) return;
+    const t = Game.now();
+    const level = world.level;
+    const pos = this.position;
 
     if (Game.needCarrier && !Game.bombPlanted && this.shield <= 0) {
       Game.needCarrier = false;
@@ -226,14 +254,15 @@ export class Hamster {
       Game.carriers++;
       if (Game.carriers > 1) Game.say('A hamster picked up the bomb!', 2.0);
     }
-    const me = Game.playerPos();
+    const target = Game.target(pos);
+    const me = target.position;
     const toX = me.x - pos.x;
     const toZ = me.z - pos.z;
     const dist = Math.hypot(toX, toZ);
     const eye = tmpDir.set(pos.x, pos.y + this.size * 0.75, pos.z);
     this.timer -= dt;
-    const pe = Game.playerEye();
-    const sees = dist < D.SIGHT_RANGE && Game.hp > 0 && Game.clearLine(eye, pe) && !Game.smoked(eye, pe);
+    const pe = target.eyePosition();
+    const sees = dist < D.SIGHT_RANGE && target.hp > 0 && Game.clearLine(eye, pe) && !Game.smoked(eye, pe);
     if (this.shield > 0) {
       this.shield = Math.max(0, this.shield - dt);
       const a = Math.atan2(-toZ, -toX) + Math.sin(t * 6 + this.phase) * 0.5;
@@ -289,15 +318,6 @@ export class Hamster {
       if (!this.nav) this.move.multiplyScalar(-1);
       this.timer = Math.min(this.timer, this.nav ? 0.1 : 0.3);
     }
-    const moving = this.move.length() > 0.05;
-    const squish = moving ? Math.sin(t * 14 + this.phase) * 0.06 : Math.sin(t * 4 + this.phase) * 0.03;
-    if (moving) {
-      const right = Math.cos(this.visual.rotation.y);
-      const rightZ = -Math.sin(this.visual.rotation.y);
-      this.flip = (right * this.move.x + rightZ * this.move.z) > 0 ? -1 : 1;
-    }
-    this.sprite.scale.set(this.baseScale.x * (1 + squish) * this.flip, this.baseScale.y * (1 - squish), 1);
-    this.sprite.rotation.z = moving ? Math.sin(t * 10 + this.phase) * 0.08 : 0;
 
     this.spit -= dt;
     if (this.spit <= 0 && this.shield <= 0 && this.kind !== 'speedy' && this.kind !== 'sniper') {
@@ -316,15 +336,17 @@ export class Hamster {
         this.timer = 0.35;
       }
     }
-    if (dist < D.PLAYER_R + this.radius + 0.1 && Math.abs(me.y - pos.y) < this.size && this.shield <= 0) {
-      Game.hurtPlayer(this.contact, this.label);
+    for (const s of Game.soldiers) {
+      if (s.hp > 0 && flatDist(pos, s.position) < D.PLAYER_R + this.radius + 0.1 && Math.abs(s.position.y - pos.y) < this.size && this.shield <= 0) {
+        Game.hurtSoldier(s, this.contact, this.label);
+      }
     }
   }
 
   snipe(dt, sees, dist, pos, me, world) {
     this.aimCd = Math.max(0, this.aimCd - dt);
     const mouth = new THREE.Vector3(pos.x, pos.y + this.size * 0.6, pos.z);
-    const target = new THREE.Vector3(me.x, me.y + 1.3, me.z);
+    const target = this.aimTarget.set(me.x, me.y + 1.3, me.z);
     if (sees && dist < D.SNIPER_RANGE && this.shield <= 0 && this.aimCd <= 0 && !this.carrier) {
       this.aim += dt;
       this.move.set(0, 0, 0);
@@ -338,6 +360,11 @@ export class Hamster {
     } else {
       this.aim = 0;
     }
+  }
+
+  updateLaser(pos) {
+    const mouth = tmpMouth.set(pos.x, pos.y + this.size * 0.6, pos.z);
+    const target = this.aimTarget;
     this.laser.visible = this.aim > 0 && (this.aim < D.SNIPER_AIM * 0.7 || Math.floor(this.aim * 20) % 2 === 0);
     if (this.laser.visible) {
       const length = mouth.distanceTo(target);

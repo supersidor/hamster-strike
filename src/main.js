@@ -6,6 +6,7 @@ import { Input } from './input.js';
 import { World } from './world.js';
 import { Hud } from './hud.js';
 import { loadAssets } from './assets.js';
+import { Net } from './net.js';
 
 THREE.ShaderChunk.fog_fragment = THREE.ShaderChunk.fog_fragment.replace(
   'float fogFactor = 1.0 - exp( - fogDensity * fogDensity * vFogDepth * vFogDepth );',
@@ -40,7 +41,8 @@ async function boot() {
   const assets = await loadAssets(BASE, (p) => { fill.style.width = `${Math.round(p * 100)}%`; });
   const world = new World(renderer, mapTexts, assets);
   const hud = new Hud(document.getElementById('hud'), BASE);
-  if (debug) window.cs = { Game, world, THREE, Input, Audio, renderer, hud };
+  Net.init(world, assets, params);
+  if (debug) window.cs = { Game, world, THREE, Input, Audio, renderer, hud, Net };
 
   const resize = () => {
     const w = window.innerWidth;
@@ -58,14 +60,14 @@ async function boot() {
 
   loading.classList.add('done');
   let last = performance.now();
+  let lastRender = 0;
   let acc = 0;
   let clock = 0;
-  const frame = (now) => {
-    requestAnimationFrame(frame);
+  const step = (now, render = true) => {
     const dt = Math.min(0.1, (now - last) / 1000);
     last = now;
     clock += dt;
-    const paused = Game.playing() && !Input.locked;
+    const paused = Game.playing() && !Input.locked && Game.role !== 'client';
     if (!paused) {
       acc += dt;
       let steps = 0;
@@ -78,13 +80,39 @@ async function boot() {
     } else {
       acc = 0;
     }
+    Net.frame(now);
     world.player.frame(dt);
     world.frame(clock);
     Audio.updateListener(world.camera);
     hud.update(world.player, world.camera);
-    renderer.render(world.scene, world.camera);
+    if (render) renderer.render(world.scene, world.camera);
+  };
+  const frame = (now) => {
+    requestAnimationFrame(frame);
+    step(now);
   };
   requestAnimationFrame(frame);
+  if (debug) {
+    window.cs.drive = async (seconds, hook) => {
+      const channel = new MessageChannel();
+      const turn = () => new Promise((resolve) => {
+        channel.port1.onmessage = () => resolve();
+        channel.port2.postMessage(0);
+      });
+      const end = performance.now() + seconds * 1000;
+      while (performance.now() < end) {
+        const now = performance.now();
+        if (now - last >= 4) {
+          const render = now - lastRender >= 100;
+          if (render) lastRender = now;
+          step(now, render);
+          if (hook) hook();
+        }
+        await turn();
+      }
+    };
+  }
+  if (params.has('online')) Net.connect();
 }
 
 boot().catch((err) => {

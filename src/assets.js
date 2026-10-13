@@ -59,21 +59,27 @@ async function loadWeapons(base) {
 
 export async function loadAssets(base, onProgress) {
   const index = await (await fetch(`${base}hamsters/index.json`)).json();
-  const total = index.length + 4;
+  const rects = await (await fetch(`${base}hamsters/rects.json`)).json();
+  const total = index.length + 5;
   let done = 0;
   const tick = () => onProgress(++done / total);
 
   const hamsterPool = [];
+  const hamsterByName = {};
   const hamsters = Promise.all(index.map(async (name) => {
     const tex = await loadTexture(`${base}hamsters/${name}.webp`);
-    tex.userData.used = usedRect(tex.image);
+    const r = rects[name];
+    tex.name = name;
+    tex.userData.used = r ? { x: r[2], y: r[3], w: r[4], h: r[5] } : usedRect(tex.image);
     hamsterPool.push(tex);
+    hamsterByName[name] = tex;
     tick();
   }));
   const hamster = loadTexture(`${base}hamster.webp`).then((t) => { tick(); return t; });
+  const petro = loadTexture(`${base}petro.webp`).then((t) => { tick(); return t; });
   const weapons = loadWeapons(base).then((w) => { tick(); return w; });
   const audio = Audio.load(base).then(() => tick());
   await Promise.all([hamsters, audio]);
   tick();
-  return { hamsterPool, hamster: await hamster, ...(await weapons) };
+  return { hamsterPool, hamsterByName, hamster: await hamster, petro: await petro, ...(await weapons) };
 }

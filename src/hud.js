@@ -1,6 +1,7 @@
 import * as D from './data.js';
 import { Game } from './game.js';
 import { Input } from './input.js';
+import { Net } from './net.js';
 
 const el = (tag, id, parent, cls) => {
   const e = document.createElement(tag);
@@ -34,6 +35,8 @@ export class Hud {
     this.bossFill = el('div', null, this.boss, 'fill');
     el('div', null, this.boss, 'name out').textContent = 'THE HAMSTER KING';
     this.banner = el('div', 'banner', root, 'mono');
+    this.board = el('div', 'board', root, 'mono out');
+    this.spec = el('div', 'spec', root, 'out');
     this.click = el('div', 'click', root, 'out');
     this.click.innerHTML = 'CLICK TO CAPTURE MOUSE<small>ESC frees the mouse</small>';
     this.cctx = this.cross.getContext('2d');
@@ -53,7 +56,7 @@ export class Hud {
     this.dpr = dpr;
     const ui = Math.max(0.55, Math.min(1.25, Math.min(window.innerWidth / 1280, window.innerHeight / 720)));
     this.root.style.setProperty('--ui', String(ui));
-    for (const e of [this.score, this.hp, this.ammo, this.loadout, this.feed, this.announce, this.banner, this.click]) e.style.zoom = String(ui);
+    for (const e of [this.score, this.hp, this.ammo, this.loadout, this.feed, this.announce, this.banner, this.click, this.board, this.spec]) e.style.zoom = String(ui);
     this.callout.style.zoom = String(ui);
     this.boss.style.zoom = String(ui);
     this.radar.style.zoom = String(ui);
@@ -102,8 +105,39 @@ export class Hud {
     lines.push('');
     const boss = Game.round > D.ROUND_WAVES.length ? '  -  BOMB ROUND: stop the Hamster King!' : '';
     lines.push(`Round ${Game.round}/${D.TOTAL_ROUNDS}${boss}`);
-    lines.push('SPACE - ready');
+    lines.push(Game.role === 'client' && Game.me.ready ? 'Waiting for the other players...' : 'SPACE - ready');
     return lines.join('\n');
+  }
+
+  crew() {
+    return [...Game.soldiers].sort((a, b) => b.kills - a.kills || a.deaths - b.deaths);
+  }
+
+  crewLines(limit = 8) {
+    return this.crew().slice(0, limit).map((s) => `${s === Game.me ? '>' : ' '} ${s.name.padEnd(16)} K ${String(s.kills).padStart(2)}  D ${String(s.deaths).padStart(2)}`).join('\n');
+  }
+
+  boardText() {
+    const rows = this.crew().map((s) => {
+      const hs = s.kills > 0 ? Math.round((100 * s.headshots) / s.kills) : 0;
+      const state = s.hp > 0 ? '  ' : 'x ';
+      const ping = s === Game.me ? Math.round(Net.rtt) : s.ping;
+      return `${s === Game.me ? '>' : ' '}${state}${s.name.padEnd(16)} ${String(s.kills).padStart(3)} ${String(s.deaths).padStart(3)} ${String(hs).padStart(3)}% ${String(s.mvps).padStart(3)} ${String(ping).padStart(4)}ms`;
+    });
+    return `${'PLAYER'.padEnd(19)} ${'K'.padStart(3)} ${'D'.padStart(3)} ${'HS'.padStart(4)} ${'MVP'.padStart(3)} ${'PING'.padStart(6)}\n${rows.join('\n')}`;
+  }
+
+  titleFooter(level) {
+    const maps = `1-${level.mapNames.length} choose map`;
+    if (Net.state === 'connecting') return 'Connecting to the server...';
+    if (Net.state === 'online') {
+      const n = Game.soldiers.length;
+      const names = this.crew().map((x) => x.name).join(', ');
+      const shown = names.length > 64 ? `${names.slice(0, 63)}...` : names;
+      return `ONLINE - ${n} player${n === 1 ? '' : 's'}: ${shown}\n${maps}    SPACE - start match    X - leave`;
+    }
+    const note = Net.notice ? `${Net.notice}\n\n` : '';
+    return `${note}${maps}    SPACE - solo    O - play online\nPlaying as ${Net.name || 'Petro'} (N to rename)`;
   }
 
   bannerText() {
@@ -117,8 +151,8 @@ export class Hud {
           + 'SPACE jump   CTRL / C crouch   SHIFT walk\n'
           + 'R reload   Q switch weapon   1-7 pick any weapon\n'
           + 'G HE grenade   F smoke (unlimited)   E (hold) defuse\n'
-          + 'ESC free mouse\n\n'
-          + `1-${level.mapNames.length} choose map    SPACE - find match`;
+          + 'TAB scoreboard (online)   ESC free mouse\n\n'
+          + this.titleFooter(level);
       case 'buy':
         return this.buyMenu();
       case 'round_end':
@@ -129,8 +163,11 @@ export class Hud {
         return `MATCH OVER - ${verdict}\n\nCT ${Game.ct} : ${Game.t} T\n\n`
           + `K ${Game.kills}   D ${Game.deaths}   HS ${hs}%   MVP x${Game.mvps}\n\n`
           + `Skill group: ${D.RANKS[Math.min(Game.ct, D.RANKS.length - 1)]}\n\n`
+          + (Game.role === 'client' ? `${this.crewLines(5)}\n\n` : '')
           + `Next map: ${level.mapName}\n${this.mapList()}\n\n`
-          + `1-${level.mapNames.length} choose map    SPACE - queue again`;
+          + (Game.role === 'client'
+            ? `1-${level.mapNames.length} choose map    SPACE - play again    X - leave`
+            : `1-${level.mapNames.length} choose map    SPACE - queue again`);
       }
       default:
         return '';
@@ -144,8 +181,14 @@ export class Hud {
     this.setText('banner', this.banner, msg);
     for (const e of [this.score, this.hp, this.ammo, this.loadout, this.feed, this.announce, this.face, this.radar]) this.show(e, playing);
     this.show(this.boss, Game.phase === 'live' && Game.bossAlive);
-    this.bossFill.style.width = `${514 * Math.max(0, Math.min(1, Game.bossHp / D.BOSS_HP))}px`;
+    this.bossFill.style.width = `${514 * Math.max(0, Math.min(1, Game.bossHp / Game.bossMax))}px`;
     this.show(this.click, playing && !Input.locked && Game.hp > 0);
+    const board = Game.role === 'client' && Input.isDown('Tab');
+    this.show(this.board, board);
+    if (board) this.setText('board', this.board, this.boardText());
+    const watching = playing && Net.watching;
+    this.show(this.spec, !!watching);
+    if (watching) this.setText('spec', this.spec, `SPECTATING ${Net.watching.name}  (click to switch)`);
     const scoped = playing && player.scoped;
     this.show(this.scope, scoped);
     if (scoped) this.scope.style.setProperty('--r', `${Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.46)}px`);
@@ -293,6 +336,7 @@ export class Hud {
       if (Math.hypot(h.position.x - me.x, h.position.y - me.y, h.position.z - me.z) < 25 || h.carrier) dot(h.position, 3.5, h.carrier ? '#ff9919' : '#ff3333');
     }
     for (const k of Game.world.kings) dot(k.position, 7, '#ffd91a');
+    for (const s of Game.soldiers) if (s !== Game.me && s.hp > 0) dot(s.position, 4.5, '#6fe38a');
     if (Game.bombPlanted && Math.floor(Game.now() * 4) % 2 === 0) {
       const [x, y] = px(Game.bombPos);
       ctx.fillStyle = '#ff1a1a';

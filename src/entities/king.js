@@ -10,6 +10,7 @@ const tmp = new THREE.Vector3();
 export class King {
   constructor(texture) {
     this.isKing = true;
+    this.id = 0;
     this.texture = texture;
     this.mode = 0;
     this.timer = 0;
@@ -66,8 +67,10 @@ export class King {
     const world = Game.world;
     world.removeKing(this);
     const p = this.position;
-    world.burst({ x: p.x, y: p.y + 2, z: p.z }, [[1.0, 0.85, 0.2], [1, 1, 1], [0.95, 0.88, 0.75], [0.9, 0.1, 0.1]], 120, 9, 0.25, 1.4);
-    world.explosionFx(p, 1.2);
+    if (Game.visual) {
+      world.burst({ x: p.x, y: p.y + 2, z: p.z }, [[1.0, 0.85, 0.2], [1, 1, 1], [0.95, 0.88, 0.75], [0.9, 0.1, 0.1]], 120, 9, 0.25, 1.4);
+      world.explosionFx(p, 1.2);
+    }
     this.disposed = true;
   }
 
@@ -78,10 +81,14 @@ export class King {
 
   update(dt, world) {
     if (this.dead) return;
-    const t = Game.now();
-    const level = world.level;
-    const cam = world.camera;
     this.grow = Math.min(1, this.grow + dt * 0.8);
+    if (Game.authority) this.think(dt, world);
+    if (Game.visual) this.animate(dt, world);
+  }
+
+  animate(dt, world) {
+    const t = Game.now();
+    const cam = world.camera;
     this.flash = Math.max(0, this.flash - dt);
     this.material.color.set(this.flash > 0 ? 0xff6666 : 0xffffff);
     const pos = this.position;
@@ -89,16 +96,32 @@ export class King {
     const pulse = 1 + (this.flash > 0 ? 0.06 * Math.sin(t * 40) : 0);
     this.visual.scale.setScalar(Math.max(0.15, this.grow * pulse));
     if (Game.bossHp <= 0 || !Game.active()) return;
+    const wobble = this.mode === 1 ? Math.sin(t * 70) * 0.15 : 0;
+    this.sprite.position.x = wobble;
+    this.sprite.rotation.z = Math.sin(t * 8) * 0.05;
+    if (this.move.lengthSq() > 0.0025) {
+      const right = Math.cos(this.visual.rotation.y);
+      const rightZ = -Math.sin(this.visual.rotation.y);
+      this.flip = (right * this.move.x + rightZ * this.move.z) > 0 ? -1 : 1;
+    }
+    this.sprite.scale.x = D.BOSS_SIZE * this.flip;
+  }
 
-    const me = Game.playerPos();
+  think(dt, world) {
+    if (Game.bossHp <= 0 || !Game.active()) return;
+    const t = Game.now();
+    const level = world.level;
+    const pos = this.position;
+
+    const target = Game.target(pos);
+    const me = target.position;
     const toX = me.x - pos.x;
     const toZ = me.z - pos.z;
     const dist = Math.max(0.1, Math.hypot(toX, toZ));
-    const enraged = Game.bossHp <= D.BOSS_HP / 2;
+    const enraged = Game.bossHp <= Game.bossMax / 2;
     const eye = tmp.set(pos.x, pos.y + this.height() * 0.8, pos.z);
-    const pe = Game.playerEye();
-    const sees = dist < D.BOSS_SIGHT_RANGE && Game.hp > 0 && Game.clearLine(eye, pe) && !Game.smoked(eye, pe);
-    let wobble = 0;
+    const pe = target.eyePosition();
+    const sees = dist < D.BOSS_SIGHT_RANGE && target.hp > 0 && Game.clearLine(eye, pe) && !Game.smoked(eye, pe);
     if (this.grow >= 1) this.timer -= dt;
     if (this.mode === 0) {
       const walk = (enraged ? 95 : 70) * 0.03;
@@ -146,7 +169,6 @@ export class King {
         }
       }
     } else if (this.mode === 1) {
-      wobble = Math.sin(t * 70) * 0.15;
       if (this.timer <= 0) {
         const charge = (enraged ? 620 : 520) * 0.03;
         this.move.set(toX / dist * charge, 0, toZ / dist * charge);
@@ -163,21 +185,15 @@ export class King {
     pos.y = col.support(pos.x, pos.z, D.BOSS_WALL_R + 0.1, pos.y, D.MAX_CLIMB);
     if (hit && this.mode === 2) {
       Audio.playAt('metal', 0.9, { x: pos.x, y: pos.y + 1, z: pos.z });
-      Game.shake = Math.max(Game.shake, 0.3);
+      Game.addShake(0.3);
       this.mode = 0;
       this.timer = 1.2;
       world.burst({ x: pos.x, y: pos.y + 1, z: pos.z }, [[1, 1, 1], [1.0, 0.8, 0.2]], 16, 5, 0.12);
     }
-    this.sprite.position.x = wobble;
-    this.sprite.rotation.z = Math.sin(t * 8) * 0.05;
-    if (this.move.lengthSq() > 0.0025) {
-      const right = Math.cos(this.visual.rotation.y);
-      const rightZ = -Math.sin(this.visual.rotation.y);
-      this.flip = (right * this.move.x + rightZ * this.move.z) > 0 ? -1 : 1;
-    }
-    this.sprite.scale.x = D.BOSS_SIZE * this.flip;
-    if (flatDist(pos, me) < D.BOSS_R + D.PLAYER_R + 0.1 && Math.abs(me.y - pos.y) < this.height()) {
-      Game.hurtPlayer(40, 'Hamster King');
+    for (const s of Game.soldiers) {
+      if (s.hp > 0 && flatDist(pos, s.position) < D.BOSS_R + D.PLAYER_R + 0.1 && Math.abs(s.position.y - pos.y) < this.height()) {
+        Game.hurtSoldier(s, 40, 'Hamster King');
+      }
     }
   }
 }

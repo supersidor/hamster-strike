@@ -9,6 +9,7 @@ for f in "$SRC"/assets/hamsters/*.png; do
   cwebp -quiet -q 80 -alpha_q 90 "$f" -o "$DEST/hamsters/$(basename "${f%.png}").webp"
 done
 ls "$DEST/hamsters" | grep webp | sed 's/\.webp$//' | jq -R . | jq -s . > "$DEST/hamsters/index.json"
+node "$(dirname "$0")/hamster-rects.mjs" "$SRC/assets/hamsters" "$DEST/hamsters/rects.json"
 cp "$SRC/assets/hamsters/CREDITS.md" "$DEST/hamsters/CREDITS.md"
 for n in hamster petro; do
   cwebp -quiet -q 85 -alpha_q 90 "$SRC/assets/$n.png" -o "$DEST/$n.webp"

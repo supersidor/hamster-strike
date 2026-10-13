@@ -222,11 +222,20 @@ export class Level {
   }
 
   flowField(startC, startR) {
+    return this.flowFieldMulti([[startC, startR]]);
+  }
+
+  flowFieldMulti(seeds) {
     const dist = new Int32Array(this.cols * this.rowCount).fill(-1);
-    if (!this.open(startC, startR)) return dist;
-    const first = startR * this.cols + startC;
-    dist[first] = 0;
-    const queue = [first];
+    const queue = [];
+    for (const [c, r] of seeds) {
+      if (!this.open(c, r)) continue;
+      const first = r * this.cols + c;
+      if (dist[first] === 0) continue;
+      dist[first] = 0;
+      queue.push(first);
+    }
+    if (queue.length === 0) return dist;
     for (let head = 0; head < queue.length; head++) {
       const i = queue[head];
       const c = i % this.cols;
