@@ -1,12 +1,9 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Level } from '../src/level.js';
+import { loadMapEntries } from '../server/maps.mjs';
 
-const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/maps');
 export function loadLevel() {
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.txt')).sort();
-  return new Level(files.map((f) => fs.readFileSync(path.join(dir, f), 'utf8')));
+  return new Level(loadMapEntries());
 }
 
 export function checkMaps(fail) {
@@ -41,6 +38,8 @@ export function checkMaps(fail) {
     for (let k = 0; k < level.walk.length; k++) if (level.walk[k] === 1 && dist[k] < 0) unreachable++;
     check(unreachable === 0, `${unreachable} floor tiles unreachable from P`);
     for (const p of [...level.spawnPoints, level.bossStart]) check(level.reachable(dist, p), 'spawn reachable');
+    for (const [label, p] of level.bombSites) check(level.reachable(dist, p), `site ${label} reachable`);
+    for (const p of level.routeTargets) check(level.reachable(dist, p), 'route waypoint reachable');
     console.log(`map ok: ${tag} ${level.cols}x${level.rowCount}`);
   }
 }

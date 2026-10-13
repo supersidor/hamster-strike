@@ -25,4 +25,5 @@ cp "$SRC/assets/weapons/ammo_canister.glb" "$DEST/weapons/ammo_canister.glb"
 cp "$SRC/assets/weapons/CREDITS.md" "$DEST/weapons/CREDITS.md"
 node "$(dirname "$0")/extract-weapons.mjs" "$SRC/assets/weapons/Weapons.fbx" "$DEST/weapons/weapons.json"
 cp "$SRC"/maps/*.txt "$DEST/../src/maps/"
+bash "$(dirname "$0")/convert-maps.sh"
 echo done

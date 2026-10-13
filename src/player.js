@@ -12,7 +12,6 @@ const FOV = 74;
 const SCOPE_FOV = 18;
 const GUN_REAR = 0.02;
 const GUN_SCALE = 1.8;
-const STEP_UP = 0.3;
 const MAX_HITS = 24;
 
 export class Player {
@@ -252,14 +251,23 @@ export class Player {
     const col = this.world.collision;
     const p = this.position;
     const v = this.velocity;
+    const step = Game.level.stepUp;
     const wasGrounded = this.grounded;
     if (wasGrounded) v.y = jump ? D.JUMP_SPEED : 0;
     else v.y -= D.GRAVITY * dt;
-    if (col.moveCircle(p, v.x * dt, 0, D.PLAYER_R, p.y, STEP_UP)) v.x = 0;
-    if (col.moveCircle(p, 0, v.z * dt, D.PLAYER_R, p.y, STEP_UP)) v.z = 0;
+    if (col.moveCircle(p, v.x * dt, 0, D.PLAYER_R, p.y, step)) v.x = 0;
+    if (col.moveCircle(p, 0, v.z * dt, D.PLAYER_R, p.y, step)) v.z = 0;
     p.y += v.y * dt;
-    const ground = col.support(p.x, p.z, D.PLAYER_R * 0.8, p.y, STEP_UP);
-    if (v.y <= 0 && p.y - ground <= (wasGrounded ? 0.3 : 0.0001)) {
+    if (v.y > 0) {
+      const head = this.eye + 0.18;
+      const top = col.ceiling(p.x, p.z, D.PLAYER_R * 0.8, p.y);
+      if (p.y + head > top) {
+        p.y = top - head;
+        v.y = 0;
+      }
+    }
+    const ground = col.support(p.x, p.z, D.PLAYER_R * 0.8, p.y, step);
+    if (v.y <= 0 && p.y - ground <= (wasGrounded ? step : 0.0001)) {
       p.y = ground;
       v.y = 0;
       this.grounded = true;

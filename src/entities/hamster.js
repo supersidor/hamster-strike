@@ -182,7 +182,7 @@ export class Hamster {
     if (world.collision.blockedAt(p.x, nz, 0.2, p.y, 0.3)) f.z *= -0.45;
     else p.z = nz;
     p.y += f.y * dt;
-    const ground = world.level.heightAt(p.x, p.z);
+    const ground = world.level.heightAt(p.x, p.z, p.y);
     if (p.y < ground) {
       p.y = ground;
       f.y = Math.abs(f.y) * 0.45;
@@ -303,7 +303,8 @@ export class Hamster {
       this.move.set(Math.cos(a) * s, 0, Math.sin(a) * s);
     }
     const col = world.collision;
-    pos.y = col.support(pos.x, pos.z, this.radius + 0.1, pos.y, D.MAX_CLIMB);
+    const wall = Math.min(this.radius, world.level.wallRadius);
+    pos.y = col.support(pos.x, pos.z, wall + 0.1, pos.y, D.MAX_CLIMB);
     let vx = this.move.x;
     let vz = this.move.z;
     if (this.kind === 'speedy' && (vx !== 0 || vz !== 0)) {
@@ -312,8 +313,8 @@ export class Hamster {
       vx += -this.move.z * k;
       vz += this.move.x * k;
     }
-    const hit = col.moveCircle(pos, vx * dt, vz * dt, this.radius, pos.y, D.MAX_CLIMB);
-    pos.y = col.support(pos.x, pos.z, this.radius + 0.1, pos.y, D.MAX_CLIMB);
+    const hit = col.moveCircle(pos, vx * dt, vz * dt, wall, pos.y, D.MAX_CLIMB);
+    pos.y = col.support(pos.x, pos.z, wall + 0.1, pos.y, D.MAX_CLIMB);
     if (hit) {
       if (!this.nav) this.move.multiplyScalar(-1);
       this.timer = Math.min(this.timer, this.nav ? 0.1 : 0.3);

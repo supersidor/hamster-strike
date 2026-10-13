@@ -3,6 +3,7 @@ import * as D from './data.js';
 import { Game } from './game.js';
 import { SimWorld } from './simworld.js';
 import { buildLevelMesh } from './levelMesh.js';
+import { buildMeshLevel } from './meshLevel.js';
 import { Effects } from './effects.js';
 import { Sky } from './sky.js';
 import { createBarrel } from './entities/barrel.js';
@@ -14,8 +15,8 @@ const SUN_DIR_TO = new THREE.Vector3(0.439, 0.643, 0.627).normalize();
 const SUN_COLOR = srgb([1.0, 0.92, 0.8]);
 
 export class World extends SimWorld {
-  constructor(renderer, mapTexts, assets) {
-    super(mapTexts, assets);
+  constructor(renderer, maps, assets) {
+    super(maps, assets);
     this.renderer = renderer;
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(srgb([0.85, 0.78, 0.68]), 0.004);
@@ -70,7 +71,8 @@ export class World extends SimWorld {
         if (o.geometry) o.geometry.dispose();
       });
     }
-    this.levelRoot.add(buildLevelMesh(this.level));
+    this.levelRoot.add(this.level.kind === 'mesh' ? buildMeshLevel(this.level) : buildLevelMesh(this.level));
+    this.scene.fog.density = this.level.maps[this.level.mapIndex].fog ?? 0.004;
     this.applySky();
   }
 
@@ -173,7 +175,7 @@ export class World extends SimWorld {
       c.mesh.position.addScaledVector(c.vel, dt);
       c.mesh.rotation.x += c.spin.x * dt;
       c.mesh.rotation.y += c.spin.y * dt;
-      const ground = this.level.heightAt(c.mesh.position.x, c.mesh.position.z);
+      const ground = this.level.heightAt(c.mesh.position.x, c.mesh.position.z, c.mesh.position.y);
       if (c.mesh.position.y < ground + 0.01) {
         c.mesh.position.y = ground + 0.01;
         c.vel.y = Math.abs(c.vel.y) * 0.35;

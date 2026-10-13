@@ -125,7 +125,7 @@ export class King {
     if (this.grow >= 1) this.timer -= dt;
     if (this.mode === 0) {
       const walk = (enraged ? 95 : 70) * 0.03;
-      const route = sees ? tmp.set(0, 0, 0) : level.steer(Game.bombPlanted ? Game.flow : Game.siteFlow, pos, tmp);
+      const route = sees ? tmp.set(0, 0, 0) : level.steer(Game.bombPlanted ? Game.kingChase : Game.kingFlow, pos, tmp);
       if (route.lengthSq() !== 0) {
         this.move.copy(route).multiplyScalar(walk * 1.5);
       } else if (sees || Game.bombPlanted) {

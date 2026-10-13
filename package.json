@@ -10,10 +10,12 @@
     "check": "node tools/check.mjs && node tools/net-test.mjs",
     "server": "node --watch server/index.mjs",
     "start": "node server/index.mjs",
-    "assets": "bash tools/convert-assets.sh"
+    "assets": "bash tools/convert-assets.sh",
+    "map": "bash tools/convert-maps.sh"
   },
   "dependencies": {
     "three": "0.170.0",
+    "three-mesh-bvh": "0.9.16",
     "ws": "8.18.0"
   },
   "devDependencies": {

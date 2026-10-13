@@ -42,7 +42,7 @@ export class Grenade {
     const from = this.object.position;
     const to = from.clone().addScaledVector(v, dt);
     const hit = world.collision.raycast(from, to.clone().addScaledVector(v.clone().normalize(), RADIUS), false);
-    const ground = world.level.heightAt(to.x, to.z);
+    const ground = world.level.heightAt(to.x, to.z, to.y);
     if (hit) {
       const n = hit.normal;
       this.object.position.copy(hit.point).addScaledVector(n, RADIUS + 0.005);

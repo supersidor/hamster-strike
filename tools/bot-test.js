@@ -32,7 +32,7 @@
         const t = e.position.clone();
         t.y += e.isKing ? 2 : e.size * 0.6;
         const d = t.distanceTo(eye);
-        if (d < bestD && d < 40 && Game.collision.clear(eye, t)) { best = t; bestD = d; }
+        if (d < bestD && d < 40 && world.collision.clear(eye, t)) { best = t; bestD = d; }
       }
       if (best) { aimAt(best); Input.mouse.add(0); } else Input.mouse.delete(0);
       if (Game.bombPlanted && (world.kings.length === 0 || Game.round <= 3 || window.botDefuseKing)) {

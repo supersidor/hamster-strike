@@ -17,10 +17,7 @@ const { Audio } = await import('../src/audio.js');
 const { SimWorld } = await import('../src/simworld.js');
 const { hamsterSpawn, kingSpawn, vec, r2 } = await import('../src/protocol.js');
 
-export function loadMapTexts() {
-  const dir = path.join(root, 'src/maps');
-  return fs.readdirSync(dir).filter((f) => f.endsWith('.txt')).sort().map((f) => fs.readFileSync(path.join(dir, f), 'utf8'));
-}
+const { loadMapEntries } = await import('./maps.mjs');
 
 function stubTexture(name, w, h, used) {
   const t = new THREE.Texture();
@@ -40,9 +37,9 @@ export function loadHamsterPool() {
 }
 
 export class ServerWorld extends SimWorld {
-  constructor(mapTexts) {
+  constructor(maps) {
     const { pool, king } = loadHamsterPool();
-    super(mapTexts, { hamsterPool: pool, hamster: king });
+    super(maps, { hamsterPool: pool, hamster: king });
     this.texturesByName = new Map(pool.map((t) => [t.name, t]));
     Game.attach(this);
   }
@@ -113,6 +110,6 @@ export function createServerGame(sink) {
   Game.setRole('server');
   Game.soldiers = [];
   Game.sink = sink;
-  const world = new ServerWorld(loadMapTexts());
+  const world = new ServerWorld(loadMapEntries());
   return { Game, world };
 }

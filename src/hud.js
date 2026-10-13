@@ -287,7 +287,7 @@ export class Hud {
     for (let r = 0; r < level.rowCount; r++) {
       for (let col = 0; col < level.cols; col++) {
         const ch = level.rows[r][col];
-        const lift = Math.max(0, Math.min(0.6, level.top(col, r) / 4));
+        const lift = Math.max(0, Math.min(0.6, level.kind === 'mesh' ? (level.top(col, r) / level.maxTop) * 0.6 : level.top(col, r) / 4));
         let rgba = [0.5 + (1 - 0.5) * lift, 0.5 + (1 - 0.5) * lift, 0.48 + (1 - 0.48) * lift, 0.8];
         if (level.isSlope(col, r)) rgba = [rgba[0] * 0.65 + 0.85 * 0.35, rgba[1] * 0.65 + 0.75 * 0.35, rgba[2] * 0.65 + 0.45 * 0.35, 0.8];
         if (ch === '#') rgba = [0.06, 0.06, 0.08, 0.85];
@@ -317,7 +317,7 @@ export class Hud {
     ctx.strokeStyle = 'rgba(255,255,255,0.5)';
     ctx.lineWidth = 2;
     ctx.strokeRect(1, 1, aw - 2, ah - 2);
-    const px = (p) => [((p.x + level.width / 2) / D.TILE) * scale, ((p.z + level.depth / 2) / D.TILE) * scale];
+    const px = (p) => [((p.x + level.width / 2) / level.tile) * scale, ((p.z + level.depth / 2) / level.tile) * scale];
     ctx.font = 'bold 18px Menlo, monospace';
     ctx.fillStyle = '#ff9933';
     for (const [label, p] of level.bombSites) {

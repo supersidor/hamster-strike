@@ -220,6 +220,10 @@ export class Collision {
     const s = this.probe(x, z, radius, feet, climb).support;
     return s === -Infinity ? this.level.heightAt(x, z) : s;
   }
+
+  ceiling() {
+    return Infinity;
+  }
 }
 
 function boxSolid(x0, x1, y0, y1, z0, z1, sight) {

@@ -3,6 +3,7 @@ import * as D from './data.js';
 import { Game } from './game.js';
 import { Level } from './level.js';
 import { Collision } from './collide.js';
+import { MeshCollision } from './meshCollide.js';
 import { Nut } from './entities/nut.js';
 import { Grenade } from './entities/grenade.js';
 import { Smoke } from './entities/smoke.js';
@@ -11,10 +12,12 @@ import { King } from './entities/king.js';
 import { shuffle, TAU } from './util.js';
 
 export class SimWorld {
-  constructor(mapTexts, assets) {
+  constructor(maps, assets) {
     this.assets = assets;
-    this.level = new Level(mapTexts);
-    this.collision = new Collision(this.level);
+    this.level = new Level(maps);
+    this.tileCollision = new Collision(this.level);
+    this.meshCollision = new MeshCollision(this.level);
+    this.collision = this.tileCollision;
     this.entityRoot = new THREE.Group();
     this.hamsters = [];
     this.kings = [];
@@ -30,6 +33,7 @@ export class SimWorld {
 
   loadMap(index) {
     this.level.loadMap(index);
+    this.collision = this.level.kind === 'mesh' ? this.meshCollision : this.tileCollision;
     this.collision.rebuild();
   }
 
@@ -66,8 +70,8 @@ export class SimWorld {
         const a = (k / steps) * TAU;
         const x = start.x + Math.cos(a) * radius;
         const z = start.z + Math.sin(a) * radius;
-        const y = level.heightAt(x, z);
-        if (Math.abs(y - start.y) > 0.4 || this.collision.blockedAt(x, z, D.PLAYER_R + 0.1, y, 0.3)) continue;
+        const y = level.heightAt(x, z, start.y);
+        if (Math.abs(y - start.y) > 0.4 || this.collision.blockedAt(x, z, D.PLAYER_R + 0.1, y, level.stepUp)) continue;
         out.push(new THREE.Vector3(x, y, z));
       }
     }

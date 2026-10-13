@@ -1,0 +1,120 @@
+{
+  "name": "de_dust2",
+  "file": "0_de_dust2",
+  "dir": "de_dust2",
+  "scale": 0.0254,
+  "cell": 1,
+  "stepUp": 0.46,
+  "sky": [
+    [
+      0.22,
+      0.48,
+      0.86
+    ],
+    [
+      0.92,
+      0.86,
+      0.74
+    ]
+  ],
+  "walls": [
+    [
+      0.76,
+      0.66,
+      0.5
+    ],
+    [
+      0.6,
+      0.5,
+      0.36
+    ],
+    [
+      0.85,
+      0.76,
+      0.6
+    ]
+  ],
+  "fog": 0.003,
+  "nonSolid": [
+    "BSP_Object.model_4",
+    "BSP_Object.model_5",
+    "BSP_Object.model_6",
+    "BSP_Object.model_7",
+    "BSP_Object.model_8",
+    "BSP_Object.model_9",
+    "BSP_Object.model_10",
+    "BSP_Object.model_11",
+    "BSP_Object.model_12",
+    "BSP_Object.model_13",
+    "BSP_Object.model_14",
+    "BSP_Object.model_15",
+    "BSP_Object.model_16",
+    "BSP_Object.model_17",
+    "BSP_Object.model_18",
+    "BSP_Object.model_19",
+    "BSP_Object.model_20",
+    "BSP_Object.model_21",
+    "BSP_Object.model_22",
+    "BSP_Object.model_23",
+    "BSP_Object.model_24",
+    "BSP_Object.model_25",
+    "BSP_Object.model_26",
+    "BSP_Object.model_27",
+    "BSP_Object.model_28"
+  ],
+  "markers": {
+    "P": [
+      250,
+      2300
+    ],
+    "T": [
+      [
+        -500,
+        -800
+      ],
+      [
+        -350,
+        -800
+      ],
+      [
+        -650,
+        -750
+      ],
+      [
+        -200,
+        -800
+      ],
+      [
+        -100,
+        -850
+      ]
+    ],
+    "K": [
+      -450,
+      -720
+    ],
+    "A": [
+      1150,
+      2450
+    ],
+    "B": [
+      -1550,
+      2650
+    ],
+    "routes": [
+      [
+        1300,
+        1000
+      ],
+      [
+        -450,
+        900
+      ],
+      [
+        -1660,
+        844
+      ]
+    ]
+  },
+  "navRadius": 0.45
+}

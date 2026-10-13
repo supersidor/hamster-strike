@@ -7,19 +7,29 @@ import { World } from './world.js';
 import { Hud } from './hud.js';
 import { loadAssets } from './assets.js';
 import { Net } from './net.js';
+import { parseMeshMap } from './meshmap.js';
 
 THREE.ShaderChunk.fog_fragment = THREE.ShaderChunk.fog_fragment.replace(
   'float fogFactor = 1.0 - exp( - fogDensity * fogDensity * vFogDepth * vFogDepth );',
   'float fogFactor = 1.0 - exp( - fogDensity * vFogDepth );',
 );
 
-const mapFiles = import.meta.glob('./maps/*.txt', { query: '?raw', import: 'default', eager: true });
-const mapTexts = Object.keys(mapFiles).sort().map((k) => mapFiles[k]);
+const tileMaps = import.meta.glob('./maps/*.txt', { query: '?raw', import: 'default', eager: true });
+const meshMaps = import.meta.glob('./maps/*.json', { import: 'default', eager: true });
+const meshBins = import.meta.glob('./maps/*.bin', { query: '?url', import: 'default', eager: true });
 const BASE = import.meta.env.BASE_URL;
 const params = new URLSearchParams(location.search);
 const debug = params.has('debug');
 
 const STEP = 1 / 120;
+
+function loadMaps() {
+  return Promise.all([...Object.keys(tileMaps), ...Object.keys(meshMaps)].sort().map(async (key) => {
+    if (key in tileMaps) return tileMaps[key];
+    const bin = await (await fetch(meshBins[key.replace(/\.json$/, '.bin')])).arrayBuffer();
+    return parseMeshMap(meshMaps[key], bin);
+  }));
+}
 
 async function boot() {
   const canvas = document.getElementById('game');
@@ -38,8 +48,8 @@ async function boot() {
     Object.defineProperty(Input, 'locked', { get: () => true, set: () => {} });
     Input.lock = () => {};
   }
-  const assets = await loadAssets(BASE, (p) => { fill.style.width = `${Math.round(p * 100)}%`; });
-  const world = new World(renderer, mapTexts, assets);
+  const [assets, maps] = await Promise.all([loadAssets(BASE, (p) => { fill.style.width = `${Math.round(p * 100)}%`; }), loadMaps()]);
+  const world = new World(renderer, maps, assets);
   const hud = new Hud(document.getElementById('hud'), BASE);
   Net.init(world, assets, params);
   if (debug) window.cs = { Game, world, THREE, Input, Audio, renderer, hud, Net };

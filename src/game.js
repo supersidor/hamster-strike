@@ -19,15 +19,16 @@ class GameState {
     this.world = null;
     this.level = null;
     this.player = null;
-    this.collision = null;
     this.phase = 'title';
     this.resetMatchStats();
     this.timer = D.FREEZE_TIME;
     this.fuses = new Map();
     this.fuseOwner = new Map();
     this.flow = new Int32Array(0);
+    this.kingChase = this.flow;
     this.flowKey = '';
     this.siteFlow = new Int32Array(0);
+    this.kingFlow = new Int32Array(0);
     this.targetSite = ['A', null];
     this.resetRoundVars();
   }
@@ -150,7 +151,6 @@ class GameState {
     this.world = world;
     this.level = world.level;
     this.player = world.player;
-    this.collision = world.collision;
     if (this.player) this.me.position = this.player.position;
     world.loadMap(0);
     this.resetRoundState();
@@ -205,6 +205,7 @@ class GameState {
     this.fuseOwner = new Map();
     this.world.resetBarrels();
     this.siteFlow = new Int32Array(0);
+    this.kingFlow = new Int32Array(0);
     this.targetSite = level.bombSites[0];
     if (this.authority) {
       this.world.placeSoldiers();
@@ -228,6 +229,7 @@ class GameState {
     if (!force && key === this.flowKey) return;
     this.flowKey = key;
     this.flow = level.flowFieldMulti(tiles);
+    this.kingChase = level.kingLinks ? level.flowFieldMulti(tiles, level.kingLinks) : this.flow;
   }
 
   say(text, seconds = 2.5) {
@@ -266,13 +268,19 @@ class GameState {
     if (this.round > 1) Audio.play('ready', 0.6);
   }
 
+  rebuildSiteFlows() {
+    const level = this.level;
+    const [sc, sr] = level.tileAt(this.targetSite[1].x, this.targetSite[1].z);
+    this.siteFlow = level.flowField(sc, sr);
+    this.kingFlow = level.kingLinks ? level.flowField(sc, sr, level.kingLinks) : this.siteFlow;
+  }
+
   startLive() {
     const level = this.level;
     this.phase = 'live';
     for (const s of this.soldiers) s.roundKills = 0;
     this.targetSite = pick(level.bombSites);
-    const [sc, sr] = level.tileAt(this.targetSite[1].x, this.targetSite[1].z);
-    this.siteFlow = level.flowField(sc, sr);
+    this.rebuildSiteFlows();
     const crew = Math.max(1, this.soldiers.filter((s) => s.hp > 0).length);
     if (this.round <= D.ROUND_WAVES.length) {
       this.timer = D.ROUND_TIME;
@@ -502,7 +510,7 @@ class GameState {
   }
 
   clearLine(a, b) {
-    return this.collision.clear(a, b);
+    return this.world.collision.clear(a, b);
   }
 
   smoked(a, b) {
@@ -806,10 +814,7 @@ class GameState {
       this.hurtAround(pos, D.BARREL_SELF_RADIUS, D.BARREL_SELF_DMG, 'an oil barrel');
     });
     this.rebuildFlow(true);
-    if (this.siteFlow.length > 0) {
-      const [sc, sr] = level.tileAt(this.targetSite[1].x, this.targetSite[1].z);
-      this.siteFlow = level.flowField(sc, sr);
-    }
+    if (this.siteFlow.length > 0) this.rebuildSiteFlows();
   }
 
   clock(seconds) {

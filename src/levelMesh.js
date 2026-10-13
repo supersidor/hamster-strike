@@ -235,7 +235,11 @@ export function buildLevelMesh(level) {
   mesh.receiveShadow = true;
   group.add(mesh);
 
-  const signs = [];
+  addBombsiteLabels(level, group);
+  return group;
+}
+
+export function addBombsiteLabels(level, group) {
   for (const [label, p] of level.bombSites) {
     const floorLabel = new THREE.Mesh(
       new THREE.PlaneGeometry(3.6, 3.6),
@@ -253,9 +257,7 @@ export function buildLevelMesh(level) {
     sign.scale.set(6, 3, 1);
     sign.position.set(p.x, p.y + 3.2, p.z);
     group.add(sign);
-    signs.push(sign);
   }
-  return group;
 }
 
 function addSlope(level, g, c, r) {
