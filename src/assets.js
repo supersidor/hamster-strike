@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Audio } from './audio.js';
 
-function loadTexture(url) {
+function loadTexture(url, colorSpace = THREE.SRGBColorSpace) {
   return new Promise((resolve, reject) => {
     new THREE.TextureLoader().load(url, (tex) => {
-      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.colorSpace = colorSpace;
       tex.anisotropy = 4;
       resolve(tex);
     }, undefined, reject);
@@ -39,10 +39,9 @@ function usedRect(image) {
   return { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
 }
 
-async function loadWeapons(base) {
-  const manifest = await (await fetch(`${base}weapons/weapons.json`)).json();
-  const bin = await (await fetch(`${base}weapons/weapons.bin`)).arrayBuffer();
-  const meshes = {};
+async function loadWeaponMeshes(url, meshes) {
+  const manifest = await (await fetch(`${url}.json`)).json();
+  const bin = await (await fetch(`${url}.bin`)).arrayBuffer();
   for (const [name, m] of Object.entries(manifest)) {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(bin, m.position, m.vertices * 3), 3));
@@ -51,10 +50,31 @@ async function loadWeapons(base) {
     g.setIndex(new THREE.BufferAttribute(new Uint32Array(bin, m.index, m.indices), 1));
     meshes[name] = g;
   }
-  const palette = await loadTexture(`${base}weapons/palette.png`);
+}
+
+async function loadAk47Material(base) {
+  const url = (n) => `${base}weapons/ak47_${n}.webp`;
+  const [map, normalMap, aoMap, roughnessMap, metalnessMap] = await Promise.all([
+    loadTexture(url('albedo')),
+    loadTexture(url('normal'), THREE.NoColorSpace),
+    loadTexture(url('ao'), THREE.NoColorSpace),
+    loadTexture(url('roughness'), THREE.NoColorSpace),
+    loadTexture(url('metallic'), THREE.NoColorSpace),
+  ]);
+  return new THREE.MeshStandardMaterial({ map, normalMap, aoMap, roughnessMap, metalnessMap, roughness: 1, metalness: 1 });
+}
+
+async function loadWeapons(base) {
+  const meshes = {};
+  const [, , palette, ak47, canister] = await Promise.all([
+    loadWeaponMeshes(`${base}weapons/weapons`, meshes),
+    loadWeaponMeshes(`${base}weapons/ak47`, meshes),
+    loadTexture(`${base}weapons/palette.png`),
+    loadAk47Material(base),
+    new GLTFLoader().loadAsync(`${base}weapons/ammo_canister.glb`),
+  ]);
   const gunMaterial = new THREE.MeshStandardMaterial({ map: palette, roughness: 0.55, metalness: 0.25 });
-  const canister = await new GLTFLoader().loadAsync(`${base}weapons/ammo_canister.glb`);
-  return { weaponMeshes: meshes, gunMaterial, canister: canister.scene };
+  return { weaponMeshes: meshes, gunMaterial, weaponMaterials: { AK47: ak47 }, canister: canister.scene };
 }
 
 export async function loadAssets(base, onProgress) {

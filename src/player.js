@@ -517,7 +517,8 @@ export class Player {
     const rear = spec.slot === 2 ? GUN_REAR : GUN_REAR - 0.02;
     const front = rear - length;
     const top = 0.05;
-    const mat = this.world.assets.gunMaterial.clone();
+    const assets = this.world.assets;
+    const mat = (assets.weaponMaterials[spec.model] ?? assets.gunMaterial).clone();
     if (spec.tint) mat.color.copy(new THREE.Color(1, 1, 1).lerp(srgb(spec.color), 0.45));
     const model = new THREE.Mesh(geo, mat);
     model.userData.own = true;

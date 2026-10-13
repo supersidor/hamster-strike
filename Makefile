@@ -1,4 +1,4 @@
-.PHONY: help install dev debug online build serve check assets clean
+.PHONY: help install dev debug online build serve check assets ak47 clean
 
 help:
 	@echo "make install  - npm install"
@@ -9,6 +9,7 @@ help:
 	@echo "make serve    - build, then run the production server on :8080"
 	@echo "make check    - map checks + headless net test"
 	@echo "make assets   - convert assets from ../petro3d"
+	@echo "make ak47     - convert the AK-47 model from ~/Downloads/ak-47-assault-rifle.zip (ZIP=...)"
 
 node_modules: package.json package-lock.json
 	npm install
@@ -36,6 +37,9 @@ check: node_modules
 
 assets:
 	npm run assets
+
+ak47: node_modules
+	bash tools/convert-ak47.sh $(ZIP)
 
 clean:
 	rm -rf dist

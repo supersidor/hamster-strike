@@ -16,6 +16,7 @@ const gunMaterials = new Map();
 
 function gunMaterial(assets, name) {
   const spec = D.WEAPONS[name];
+  if (assets.weaponMaterials[spec.model]) return assets.weaponMaterials[spec.model];
   if (!spec.tint) return assets.gunMaterial;
   if (!gunMaterials.has(name)) {
     const mat = assets.gunMaterial.clone();
