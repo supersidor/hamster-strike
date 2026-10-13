@@ -3,7 +3,9 @@ kind: Deployment
 metadata:
   name: hamster-strike
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: hamster-strike
@@ -28,7 +30,7 @@ spec:
             initialDelaySeconds: 5
           resources:
             requests:
-              cpu: 10m
-              memory: 32Mi
+              cpu: 100m
+              memory: 96Mi
             limits:
-              memory: 64Mi
+              memory: 256Mi

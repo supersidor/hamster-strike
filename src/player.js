@@ -3,6 +3,7 @@ import * as D from './data.js';
 import { Game } from './game.js';
 import { Audio } from './audio.js';
 import { Input } from './input.js';
+import { Net } from './net.js';
 import { rayCylinder } from './collide.js';
 import { clamp, expo, randf, srgb, TAU } from './util.js';
 
@@ -82,6 +83,7 @@ export class Player {
   }
 
   onKey(code) {
+    if (Net.onKey(code)) return;
     if (Game.phase === 'title' || Game.phase === 'match_end') {
       if (code === 'Space' || code === 'Enter' || code === 'NumpadEnter') Input.lock();
     } else if (Game.playing() && (code === 'Space' || code === 'Enter')) {
@@ -102,6 +104,7 @@ export class Player {
       Input.lock();
       return;
     }
+    if (Game.role === 'client' && Game.hp <= 0 && Game.playing()) Net.cycleSpectate();
     if (button === 2 && Game.current === 'awp' && Game.active() && Input.locked) this.scoped = !this.scoped;
   }
 
@@ -156,7 +159,10 @@ export class Player {
 
     const nearBomb = Game.bombPlanted && Math.hypot(this.position.x - Game.bombPos.x, this.position.z - Game.bombPos.z) < D.DEFUSE_RANGE;
     const defusing = live && nearBomb && Input.isDown('KeyE');
-    if (defusing) {
+    if (Game.role === 'client') {
+      if (defusing && !Game.me.defusing) Audio.play('use', 0.8);
+      Game.me.defusing = defusing;
+    } else if (defusing) {
       if (Game.defuse === 0) Audio.play('use', 0.8);
       Game.defuse += dt;
       if (Game.defuse >= (Game.kit ? D.KIT_DEFUSE_TIME : D.DEFUSE_TIME)) Game.defused();
@@ -165,11 +171,12 @@ export class Player {
     }
 
     this.move(dt, live && !defusing);
-    const tile = Game.level.tileAt(this.position.x, this.position.z);
-    if ((tile[0] !== Game.flowTile[0] || tile[1] !== Game.flowTile[1]) && Game.level.inside(tile[0], tile[1])) {
-      Game.flowTile = tile;
-      Game.flow = Game.level.flowField(tile[0], tile[1]);
-    }
+    const me = Game.me;
+    me.yaw = this.yaw;
+    me.pitch = this.pitch;
+    me.crouch = this.crouching;
+    me.weapon = Game.current;
+    me.eyeHeight = this.eye;
 
     const spec = D.WEAPONS[Game.current];
     const hspeed = Math.hypot(this.velocity.x, this.velocity.z);
@@ -183,7 +190,8 @@ export class Player {
       const fwd = this.forward();
       const pos = this.eyePosition().addScaledVector(fwd, 0.5);
       const vel = fwd.clone().multiplyScalar(15).add(new THREE.Vector3(0, 3, 0)).addScaledVector(this.velocity, 0.5);
-      this.world.spawnGrenade(pos, vel, this.wantSmoke);
+      if (Game.role === 'client') Game.send({ t: 'nade', p: [pos.x, pos.y, pos.z], v: [vel.x, vel.y, vel.z], sm: this.wantSmoke ? 1 : 0 });
+      else this.world.spawnGrenade(pos, vel, this.wantSmoke);
       if (this.wantSmoke) {
         Game.say('Smoke out!', 1.5);
       } else {
@@ -278,6 +286,14 @@ export class Player {
   }
 
   syncCamera() {
+    const watch = Net.watching;
+    if (watch) {
+      this.camera.position.set(watch.position.x, watch.position.y + watch.eyeHeight, watch.position.z);
+      this.euler.set(watch.pitch, watch.yaw, 0);
+      this.camera.quaternion.setFromEuler(this.euler);
+      this.camera.updateMatrixWorld(true);
+      return;
+    }
     const shake = Game.shake;
     this.camera.position.set(this.position.x, this.position.y + this.eye, this.position.z);
     this.euler.set(
@@ -308,11 +324,16 @@ export class Player {
     const fwd = this.forward();
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
     const up = new THREE.Vector3(0, 1, 0).applyQuaternion(this.camera.quaternion);
+    let shotEnd = null;
     for (let i = 0; i < spec.pellets; i++) {
       const r = this.spread * Math.sqrt(Math.random());
       const a = Math.random() * TAU;
       const dir = fwd.clone().addScaledVector(right, Math.tan(r) * Math.cos(a)).addScaledVector(up, Math.tan(r) * Math.sin(a)).normalize();
-      this.hitscan(origin, dir, spec, weapon);
+      const end = this.hitscan(origin, dir, spec, weapon);
+      if (!shotEnd) shotEnd = end;
+    }
+    if (Game.role === 'client' && shotEnd) {
+      Game.send({ t: 'shot', w: weapon, o: [origin.x, origin.y, origin.z], e: [shotEnd.x, shotEnd.y, shotEnd.z] });
     }
     const pull = spec.settle ? Math.max(0, 4 - this.spray) : this.spray;
     this.punch += spec.kick + spec.climb * pull;
@@ -381,7 +402,9 @@ export class Player {
         if (target.shield > 0) continue;
         const headshot = pos.y > target.position.y + target.size * 0.66;
         world.burst(pos, [[1, 1, 1], [0.95, 0.85, 0.7], [0.9, 0.2, 0.2]], 8, 3.0, 0.07, 0.5);
-        if (Game.damageHamster(target, spec.dmg, spec.name, headshot, { x: dir.x * (pierce ? 12 : 4), y: dir.y * (pierce ? 12 : 4), z: dir.z * (pierce ? 12 : 4) })) {
+        if (Game.role === 'client') {
+          Game.send({ t: 'hit', id: target.id, w: weapon, hs: headshot ? 1 : 0, d: [dir.x, dir.y, dir.z] });
+        } else if (Game.damageHamster(target, spec.dmg, spec.name, headshot, { x: dir.x * (pierce ? 12 : 4), y: dir.y * (pierce ? 12 : 4), z: dir.z * (pierce ? 12 : 4) })) {
           killed++;
           if (killed === 2) Audio.play('holy_shit', 0.8);
         }
@@ -396,14 +419,18 @@ export class Player {
           kingHit = true;
           const headshot = pos.y > target.position.y + target.height() * 0.7;
           world.burst(pos, [[1, 1, 1], [0.95, 0.85, 0.7]], 10, 3.5, 0.1, 0.5);
-          Game.hitKing(target, spec.dmg, spec.name, headshot);
+          if (Game.role === 'client') Game.send({ t: 'hit', k: 1, id: target.id, w: weapon, hs: headshot ? 1 : 0 });
+          else Game.hitKing(target, spec.dmg, spec.name, headshot);
         }
         if (!pierce) {
           tracerEnd = pos;
           break;
         }
       } else {
-        if (wh.barrel) Game.ignite(wh.barrel);
+        if (wh.barrel) {
+          if (Game.role === 'client') Game.send({ t: 'ignite', c: wh.barrel[0], r: wh.barrel[1] });
+          else Game.ignite(wh.barrel);
+        }
         if (worldDecals < 3) {
           world.impact(wh.point, wh.normal);
           worldDecals++;
@@ -417,6 +444,7 @@ export class Player {
     }
     if (weapon === 'awp') world.tracer(muzzle, tracerEnd, [0.5, 1.0, 0.5], 0.35, 0.02);
     else if (Math.random() < 0.5) world.tracer(muzzle, tracerEnd, [1.0, 0.85, 0.4], 0.05, 0.012);
+    return tracerEnd;
   }
 
   updateViewmodel(dt, hspeed) {

@@ -72,6 +72,9 @@ export const KIND_WEIGHTS = [
   { normal: 5, chubby: 3, speedy: 2, tank: 1 },
   { normal: 4, chubby: 3, speedy: 2, tank: 2, sniper: 2 },
 ];
+export const COOP_WAVE = 0.6;
+export const COOP_BOSS = 0.8;
+export const MAX_PLAYERS = 8;
 export const HELMET_HP = 3;
 export const SNIPER_RANGE = 20.0;
 export const SNIPER_AIM = 1.2;
