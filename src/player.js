@@ -25,6 +25,8 @@ export class Player {
     this.punch = 0;
     this.fireCd = 0;
     this.nadeCd = 0;
+    this.woofCd = 0;
+    this.lastWoof = 0;
     this.crouching = false;
     this.scoped = false;
     this.spread = 0;
@@ -101,8 +103,20 @@ export class Player {
           Game.announceT = 1.5;
         }
         break;
-      default: break;
+      default:
+        if (D.DOG_SOUNDS[code]) this.woof(D.DOG_SOUNDS[code]);
+        break;
     }
+  }
+
+  woof(kind) {
+    if (!Game.playing() || !Game.me.dog || Game.hp <= 0 || this.woofCd > 0) return;
+    this.woofCd = D.DOG_SOUND_CD;
+    let v = 1 + Math.floor(Math.random() * D.DOG_VARIANTS);
+    if (v === this.lastWoof) v = (v % D.DOG_VARIANTS) + 1;
+    this.lastWoof = v;
+    Audio.play(`dog_${kind}_${v}`, 0.9);
+    if (Game.role === 'client') Game.send({ t: 'woof', n: kind, v });
   }
 
   onMouseDown(button) {
@@ -121,6 +135,7 @@ export class Player {
   update(dt) {
     this.fireCd = Math.max(0, this.fireCd - dt);
     this.nadeCd = Math.max(0, this.nadeCd - dt);
+    this.woofCd = Math.max(0, this.woofCd - dt);
     this.punch = this.punch * Math.exp(-7 * dt);
     this.kick = this.kick * Math.exp(-14 * dt);
     this.recoilYaw = this.recoilYaw * Math.exp(-5 * dt);

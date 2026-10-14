@@ -165,6 +165,7 @@ export class Room {
       case 'ignite': this.onIgnite(s, m); break;
       case 'shot': this.onShot(client, s, m); break;
       case 'nade': this.onNade(client, s, m); break;
+      case 'woof': this.onWoof(client, s, m); break;
       case 'map':
       case 'start':
       case 'ready':
@@ -237,6 +238,15 @@ export class Room {
   onShot(client, s, m) {
     if (s.hp <= 0 || !D.WEAPONS[m.w] || !vec3(m.o) || !vec3(m.e)) return;
     this.queue.push({ msg: { t: 'shot', id: s.id, w: m.w, o: m.o, e: m.e }, except: client });
+  }
+
+  onWoof(client, s, m) {
+    const now = this.now();
+    if (s.hp <= 0 || !s.dog || !Object.values(D.DOG_SOUNDS).includes(m.n)) return;
+    if (!Number.isInteger(m.v) || m.v < 1 || m.v > D.DOG_VARIANTS) return;
+    if (client.woofAt && now - client.woofAt < D.DOG_SOUND_CD * 800) return;
+    client.woofAt = now;
+    this.queue.push({ msg: { t: 'woof', id: s.id, n: m.n, v: m.v }, except: client });
   }
 
   onNade(client, s, m) {

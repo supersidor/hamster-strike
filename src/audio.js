@@ -23,20 +23,30 @@ class AudioSystem {
   }
 
   async load(base, onProgress) {
-    const names = await (await fetch(`${base}sounds/index.json`)).json();
     const ctx = this.ensureContext();
     if (!ctx) return;
-    let done = 0;
-    await Promise.all(names.map(async (name) => {
+    const groups = [['sounds', ''], ['dog', 'dog_']];
+    const lists = await Promise.all(groups.map(async ([dir, prefix]) => {
       try {
-        const res = await fetch(`${base}sounds/${name}.wav`);
+        const names = await (await fetch(`${base}${dir}/index.json`)).json();
+        return names.map((name) => [dir, prefix, name]);
+      } catch (err) {
+        console.warn('sound index failed', dir, err);
+        return [];
+      }
+    }));
+    const files = lists.flat();
+    let done = 0;
+    await Promise.all(files.map(async ([dir, prefix, name]) => {
+      try {
+        const res = await fetch(`${base}${dir}/${name}.wav`);
         const data = await res.arrayBuffer();
-        this.buffers.set(name, await ctx.decodeAudioData(data));
+        this.buffers.set(prefix + name, await ctx.decodeAudioData(data));
       } catch (err) {
         console.warn('sound failed', name, err);
       }
       done++;
-      if (onProgress) onProgress(done / names.length);
+      if (onProgress) onProgress(done / files.length);
     }));
   }
 

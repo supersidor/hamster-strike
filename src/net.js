@@ -401,9 +401,18 @@ class NetClient {
       case 'shot':
         this.remoteShot(e);
         break;
+      case 'woof':
+        this.remoteWoof(e);
+        break;
       default:
         break;
     }
+  }
+
+  remoteWoof(e) {
+    const s = this.remotes.get(e.id);
+    if (!s || !s.dog) return;
+    Audio.playAt(`dog_${e.n}_${e.v}`, 0.9, { x: s.position.x, y: s.position.y + 0.5, z: s.position.z });
   }
 
   remoteShot(e) {

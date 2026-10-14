@@ -151,6 +151,7 @@ export class Hud {
           + 'SPACE jump   CTRL / C crouch   SHIFT walk\n'
           + 'R reload   Q switch weapon   1-7 pick any weapon\n'
           + 'G HE grenade   F smoke (unlimited)   E (hold) defuse\n'
+          + 'H dog mode   Z bark   X growl   V whine   B howl (dog mode)\n'
           + 'TAB scoreboard (online)   ESC free mouse\n\n'
           + this.titleFooter(level);
       case 'buy':

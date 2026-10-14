@@ -102,6 +102,9 @@ export const HE_DMG = 4;
 export const HE_SELF_RADIUS = 3.0;
 export const HE_SELF_DMG = 15;
 export const NADE_COOLDOWN = 0.8;
+export const DOG_SOUNDS = { KeyZ: 'bark', KeyX: 'growl', KeyV: 'whine', KeyB: 'howl' };
+export const DOG_VARIANTS = 10;
+export const DOG_SOUND_CD = 0.4;
 export const SMOKE_RADIUS = 5.0;
 export const SMOKE_TIME = 12.0;
 
