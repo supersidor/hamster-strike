@@ -131,7 +131,11 @@ const whine = [...whineBase.slice(0, 6), shift(whineBase[0], 0.85), shift(whineB
 const wolf = readWav('wolf_howls');
 const howl = Array.from({ length: 10 }, (_, i) => window(wolf, 0.4 + i * 2.75, 2.5)).map((s) => finish(s, 0.2, 0.4));
 
-const groups = { bark, growl, whine, howl };
+const lab = readWav('lab');
+const happyBase = [[8.35, 0.45], [13.45, 0.4], [48.6, 0.9], [52.7, 1.2], [72.5, 0.45], [62.15, 1.45], [15.95, 0.6]].map(([from, dur]) => window(lab, from, dur));
+const happy = [...happyBase, shift(happyBase[2], 0.85), shift(happyBase[3], 1.15), shift(happyBase[5], 0.9)].map((s) => finish(s, 0.03, 0.12));
+
+const groups = { bark, growl, whine, howl, happy };
 fs.mkdirSync(outDir, { recursive: true });
 const names = [];
 for (const [kind, list] of Object.entries(groups)) {

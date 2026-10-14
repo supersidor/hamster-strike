@@ -404,6 +404,9 @@ class NetClient {
       case 'woof':
         this.remoteWoof(e);
         break;
+      case 'pat':
+        this.remotePat(e);
+        break;
       default:
         break;
     }
@@ -413,6 +416,55 @@ class NetClient {
     const s = this.remotes.get(e.id);
     if (!s || !s.dog) return;
     Audio.playAt(`dog_${e.n}_${e.v}`, 0.9, { x: s.position.x, y: s.position.y + 0.5, z: s.position.z });
+  }
+
+  patTarget(pos, forward, maxRange = D.PAT_RANGE) {
+    let best = null;
+    let bestD = maxRange;
+    for (const s of this.remotes.values()) {
+      if (!s.dog || s.hp <= 0) continue;
+      const dx = s.position.x - pos.x;
+      const dz = s.position.z - pos.z;
+      const d = Math.hypot(dx, dz);
+      if (d >= bestD || Math.abs(s.position.y - pos.y) > 1.2) continue;
+      if (d > 0.3 && (dx * forward.x + dz * forward.z) / (d * Math.hypot(forward.x, forward.z)) < 0.64) continue;
+      best = s;
+      bestD = d;
+    }
+    return best;
+  }
+
+  patFx(dog, patter) {
+    if (dog.avatar) dog.avatar.wag();
+    if (patter && patter.avatar) patter.avatar.pat();
+    const timed = this.world.effects.timed;
+    for (let i = 0; i < 3; i++) {
+      let wait = i * 0.25;
+      timed.push((dt) => {
+        wait -= dt;
+        if (wait > 0) return true;
+        const pos = { x: dog.position.x + (Math.random() - 0.5) * 0.5, y: dog.position.y + 0.9, z: dog.position.z + (Math.random() - 0.5) * 0.5 };
+        this.world.floatText(pos, '♥', [1, 0.4, 0.6], 40);
+        return false;
+      });
+    }
+  }
+
+  remotePat(e) {
+    const patter = this.remotes.get(e.id);
+    if (e.to === Game.me.id) {
+      if (!Number.isInteger(e.v)) return;
+      Audio.play(`dog_${D.DOG_PAT_SOUND}_${e.v}`, 0.9);
+      Game.announce = `♥ ${patter ? patter.name : 'Someone'} pats you ♥`;
+      Game.announceT = 2;
+      Game.player.wag();
+      if (patter && patter.avatar) patter.avatar.pat();
+      return;
+    }
+    const dog = this.remotes.get(e.to);
+    if (!dog) return;
+    Audio.playAt(`dog_${D.DOG_PAT_SOUND}_${e.v}`, 0.9, { x: dog.position.x, y: dog.position.y + 0.5, z: dog.position.z });
+    this.patFx(dog, patter);
   }
 
   remoteShot(e) {

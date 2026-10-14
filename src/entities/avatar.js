@@ -107,6 +107,9 @@ export class Avatar {
     this.dog = false;
     this.dogMesh = null;
     this.harness = null;
+    this.patT = 0;
+    this.wagT = 0;
+    this.wagging = false;
 
     this.headMat = new THREE.MeshStandardMaterial({ map: assets.petro, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.9, metalness: 0 });
     this.head = new THREE.Mesh(PLANE, this.headMat);
@@ -176,6 +179,14 @@ export class Avatar {
     this.flashT = 0.06;
   }
 
+  pat() {
+    this.patT = D.PAT_TIME;
+  }
+
+  wag() {
+    this.wagT = D.PAT_TIME;
+  }
+
   pose(pos, yaw, pitch, crouch, weapon, dog) {
     this.object.position.copy(pos);
     this.setDog(dog);
@@ -188,6 +199,25 @@ export class Avatar {
   update(dt, camera) {
     const p = this.object.position;
     this.head.rotation.y = Math.atan2(camera.position.x - p.x, camera.position.z - p.z);
+    if (this.patT > 0) {
+      this.patT -= dt;
+      if (!this.dog) this.arm.rotation.x = -0.5 + 0.35 * Math.sin((D.PAT_TIME - this.patT) * 11);
+    }
+    this.gunPivot.visible = this.patT <= 0;
+    if (this.wagT > 0 && this.dog) {
+      this.wagT -= dt;
+      const t = D.PAT_TIME - this.wagT;
+      const fade = Math.min(1, this.wagT / 0.3);
+      this.body.rotation.z = 0.12 * Math.sin(t * 16) * fade;
+      this.body.rotation.y += 0.15 * Math.sin(t * 9) * fade;
+      this.body.position.y = 0.04 * Math.abs(Math.sin(t * 8)) * fade;
+      this.wagging = true;
+    } else if (this.wagging) {
+      this.wagT = 0;
+      this.wagging = false;
+      this.body.rotation.z = 0;
+      this.body.position.y = 0;
+    }
     if (this.flashT > 0) {
       this.flashT -= dt;
       if (this.muzzle) {

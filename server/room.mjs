@@ -166,6 +166,7 @@ export class Room {
       case 'shot': this.onShot(client, s, m); break;
       case 'nade': this.onNade(client, s, m); break;
       case 'woof': this.onWoof(client, s, m); break;
+      case 'pat': this.onPat(client, s, m); break;
       case 'map':
       case 'start':
       case 'ready':
@@ -247,6 +248,17 @@ export class Room {
     if (client.woofAt && now - client.woofAt < D.DOG_SOUND_CD * 800) return;
     client.woofAt = now;
     this.queue.push({ msg: { t: 'woof', id: s.id, n: m.n, v: m.v }, except: client });
+  }
+
+  onPat(client, s, m) {
+    const now = this.now();
+    if (s.hp <= 0 || s.dog || !Number.isInteger(m.id) || !Number.isInteger(m.v) || m.v < 1 || m.v > D.DOG_VARIANTS) return;
+    const dog = this.Game.soldiers.find((x) => x.id === m.id);
+    if (!dog || dog === s || dog.hp <= 0 || !dog.dog) return;
+    if (Math.hypot(dog.position.x - s.position.x, dog.position.z - s.position.z) > D.PAT_RANGE + 1) return;
+    if (client.patAt && now - client.patAt < D.PAT_TIME * 800) return;
+    client.patAt = now;
+    this.queue.push({ msg: { t: 'pat', id: s.id, to: dog.id, v: m.v }, except: client });
   }
 
   onNade(client, s, m) {

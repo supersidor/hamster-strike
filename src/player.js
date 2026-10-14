@@ -27,6 +27,10 @@ export class Player {
     this.nadeCd = 0;
     this.woofCd = 0;
     this.lastWoof = 0;
+    this.patT = 0;
+    this.patCd = 0;
+    this.lastPat = 0;
+    this.wagT = 0;
     this.crouching = false;
     this.scoped = false;
     this.spread = 0;
@@ -53,6 +57,8 @@ export class Player {
     this.viewmodel = new THREE.Group();
     this.viewmodel.scale.setScalar(0.3);
     this.camera.add(this.viewmodel);
+    this.patHand = this.buildPatHand();
+    this.camera.add(this.patHand);
     this.flashLight = new THREE.PointLight(0xffcc73, 0, 6, 2);
     this.flashLight.position.set(0.1, -0.1, -0.6);
     this.camera.add(this.flashLight);
@@ -96,6 +102,7 @@ export class Player {
       case 'KeyQ': this.wantSwitch = true; break;
       case 'KeyG': this.wantHe = true; break;
       case 'KeyF': this.wantSmoke = true; break;
+      case 'KeyE': this.pat(); break;
       case 'KeyH':
         if (Game.playing()) {
           Game.me.dog = !Game.me.dog;
@@ -119,6 +126,39 @@ export class Player {
     if (Game.role === 'client') Game.send({ t: 'woof', n: kind, v });
   }
 
+  buildPatHand() {
+    const group = new THREE.Group();
+    const sleeve = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.07, 0.3), new THREE.MeshStandardMaterial({ color: srgb([0.18, 0.34, 0.72]), roughness: 0.75 }));
+    sleeve.position.z = 0.15;
+    const hand = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.05, 0.11), new THREE.MeshStandardMaterial({ color: srgb([0.93, 0.74, 0.6]), roughness: 0.8 }));
+    hand.position.z = -0.03;
+    group.add(sleeve, hand);
+    group.visible = false;
+    return group;
+  }
+
+  nearBomb() {
+    return Game.bombPlanted && Math.hypot(this.position.x - Game.bombPos.x, this.position.z - Game.bombPos.z) < D.DEFUSE_RANGE;
+  }
+
+  pat() {
+    if (Game.role !== 'client' || !Game.playing() || Game.me.dog || Game.hp <= 0 || this.patCd > 0 || this.nearBomb()) return;
+    const dog = Net.patTarget(this.position, this.forward());
+    if (!dog) return;
+    let v = 1 + Math.floor(Math.random() * D.DOG_VARIANTS);
+    if (v === this.lastPat) v = (v % D.DOG_VARIANTS) + 1;
+    this.lastPat = v;
+    this.patT = D.PAT_TIME;
+    this.patCd = D.PAT_TIME;
+    Audio.playAt(`dog_${D.DOG_PAT_SOUND}_${v}`, 0.9, { x: dog.position.x, y: dog.position.y + 0.5, z: dog.position.z });
+    Net.patFx(dog, null);
+    Game.send({ t: 'pat', id: dog.id, v });
+  }
+
+  wag() {
+    this.wagT = D.PAT_TIME;
+  }
+
   onMouseDown(button) {
     if (Game.playing() && !Input.locked) {
       Input.lock();
@@ -136,6 +176,9 @@ export class Player {
     this.fireCd = Math.max(0, this.fireCd - dt);
     this.nadeCd = Math.max(0, this.nadeCd - dt);
     this.woofCd = Math.max(0, this.woofCd - dt);
+    this.patT = Math.max(0, this.patT - dt);
+    this.patCd = Math.max(0, this.patCd - dt);
+    this.wagT = Math.max(0, this.wagT - dt);
     this.punch = this.punch * Math.exp(-7 * dt);
     this.kick = this.kick * Math.exp(-14 * dt);
     this.recoilYaw = this.recoilYaw * Math.exp(-5 * dt);
@@ -146,6 +189,7 @@ export class Player {
       this.yaw += dt * 0.12;
       this.pitch += (-0.08 - this.pitch) * Math.min(1, dt);
       this.viewmodel.visible = false;
+      this.patHand.visible = false;
       this.wantReload = this.wantSwitch = this.wantHe = this.wantSmoke = false;
       this.scoped = false;
       this.roll = 0;
@@ -156,12 +200,13 @@ export class Player {
       this.eye += (0.3 - this.eye) * expo(5, dt);
       this.roll += (0.6 - this.roll) * expo(4, dt);
       this.viewmodel.visible = false;
+      this.patHand.visible = false;
       this.velocity.x = 0;
       this.velocity.z = 0;
       this.vertical(dt, false);
       return;
     }
-    this.roll = 0;
+    this.roll = this.wagT > 0 ? 0.04 * Math.sin((D.PAT_TIME - this.wagT) * 16) * Math.min(1, this.wagT / 0.3) : 0;
     const live = Game.active();
     if (Game.current !== 'awp' || !live || Game.reloading > 0) this.scoped = false;
     if (this.wantSwitch && live && Game.primary !== '') {
@@ -178,8 +223,7 @@ export class Player {
     this.wantReload = false;
     this.wantSwitch = false;
 
-    const nearBomb = Game.bombPlanted && Math.hypot(this.position.x - Game.bombPos.x, this.position.z - Game.bombPos.z) < D.DEFUSE_RANGE;
-    const defusing = live && nearBomb && Input.isDown('KeyE');
+    const defusing = live && this.nearBomb() && Input.isDown('KeyE');
     if (Game.role === 'client') {
       if (defusing && !Game.me.defusing) Audio.play('use', 0.8);
       Game.me.defusing = defusing;
@@ -205,7 +249,7 @@ export class Player {
     this.syncCamera();
     const shooting = Input.mouse.has(0) && Input.locked;
     if (!shooting || Game.reloading > 0) this.spray = Math.max(0, this.spray - dt * 12);
-    if (live && shooting && !defusing && this.fireCd <= 0 && Game.reloading <= 0) this.fire(spec);
+    if (live && shooting && !defusing && this.patT <= 0 && this.fireCd <= 0 && Game.reloading <= 0) this.fire(spec);
     if (live && this.nadeCd <= 0 && (this.wantHe || this.wantSmoke)) {
       this.nadeCd = D.NADE_COOLDOWN;
       const fwd = this.forward();
@@ -488,7 +532,16 @@ export class Player {
     if (Game.reloading > 0) {
       dip = Math.sin(clamp(Game.reloading / D.WEAPONS[Game.current].reload, 0, 1) * Math.PI) * 0.18;
     }
-    this.viewmodel.position.set(0.11 + sx, -0.1 - dip * 0.5 + sy, -0.2 + this.kick * 0.03);
+    let lower = 0;
+    if (this.patT > 0) {
+      const k = D.PAT_TIME - this.patT;
+      lower = Math.min(1, k / 0.12, this.patT / 0.15);
+      const stroke = Math.sin(k * 11);
+      this.patHand.position.set(0.1, -0.22 * lower - 0.1 * (1 - lower), -0.42 - 0.1 * stroke);
+      this.patHand.rotation.set(-0.5 + 0.2 * stroke, 0, 0);
+    }
+    this.patHand.visible = this.patT > 0 && !this.scoped;
+    this.viewmodel.position.set(0.11 + sx, -0.1 - dip * 0.5 - lower * 0.3 + sy, -0.2 + this.kick * 0.03);
     this.viewmodel.rotation.set(this.kick * 0.12 - dip, 0, dip * 0.8);
     const on = this.flashT > 0;
     if (this.flash) {

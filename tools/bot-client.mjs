@@ -5,6 +5,7 @@ const name = process.argv[3] || 'Bot';
 const seconds = Number(process.argv[4]) || 120;
 const weapon = process.argv[5] || 'ak47';
 const autostart = process.argv[6] === 'autostart';
+const dog = process.argv[7] === 'dog';
 
 const ws = new WebSocket(url);
 const hamsters = new Map();
@@ -50,7 +51,7 @@ ws.on('close', () => { console.log('closed', JSON.stringify({ ...log, phases: [.
 
 setInterval(() => {
   if (!pos) return;
-  send({ t: 's', x: pos[0], y: pos[1], z: pos[2], yw: 0.3, pt: 0, cr: 0, w: weapon, df: 0, pg: 20 });
+  send({ t: 's', x: pos[0], y: pos[1], z: pos[2], yw: 0.3, pt: 0, cr: 0, w: weapon, df: 0, dg: dog ? 1 : 0, pg: 20 });
   if (autostart && (phase === 'title' || phase === 'match_end')) send({ t: 'start' });
   if (phase === 'buy') send({ t: 'ready' });
 }, 100);
